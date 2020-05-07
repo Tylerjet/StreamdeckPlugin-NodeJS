@@ -1,0 +1,19 @@
+{
+  "name": "streamdeck-nodejs",
+  "version": "0.0.1",
+  "description": "Allows you to run nodejs with the elgato streamdeck.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tylerjet/Streamdeck-NodeJS.git"
+  },
+  "author": "MrTylerjet",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tylerjet/Streamdeck-NodeJS/issues"
+  },
+  "homepage": "https://github.com/Tylerjet/Streamdeck-NodeJS#readme"
+}
