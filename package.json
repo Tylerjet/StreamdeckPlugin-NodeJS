@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/Tylerjet/Streamdeck-NodeJS/issues"
   },
-  "homepage": "https://github.com/Tylerjet/Streamdeck-NodeJS#readme"
+  "homepage": "https://github.com/Tylerjet/Streamdeck-NodeJS#readme",
+  "dependencies": {
+    "minimist": "^1.2.5",
+    "pkg": "^4.4.8",
+    "ws": "^7.2.5"
+  }
 }
