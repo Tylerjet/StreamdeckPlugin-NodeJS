@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Tylerjet/Streamdeck-NodeJS#readme",
   "dependencies": {
     "minimist": "^1.2.5",
+    "moment": "^2.25.3",
     "pkg": "^4.4.8",
     "ws": "^7.2.5"
   }
