@@ -1,2 +1,2 @@
 # Streamdeck-NodeJS
-Allows you to run nodejs with the elgato streamdeck.
+Allows you to run NodeJS with the elgato streamdeck.
