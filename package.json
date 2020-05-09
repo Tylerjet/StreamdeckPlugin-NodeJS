@@ -4,7 +4,8 @@
   "description": "Allows you to run nodejs with the elgato streamdeck.",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "pkg -t win main.js"
   },
   "repository": {
     "type": "git",
