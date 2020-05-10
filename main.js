@@ -52,7 +52,6 @@ function connectElgatoStreamDeckSocket(
     websocket.onmessage = (evt) => {
         // Received message from Stream Deck
         const jsonObj = JSON.parse(evt.data);
-        //Log(JSON.stringify(jsonObj));
 
         switch (jsonObj['event']) {
             case "keyDown":
