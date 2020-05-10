@@ -1,7 +1,7 @@
 {
   "Actions": [{
     "Icon": "Icon",
-    "Name": "Renameme",
+    "Name": "Rename Me",
     "States": [{
       "Image": "Image"
     }],
@@ -9,7 +9,7 @@
     "UUID": "com.rename_me.action"
   }],
   "SDKVersion": 2,
-  "Author": "Rename me",
+  "Author": "Rename Me",
   "CodePath": "main.exe",
   "Description": "Description goes here",
   "Name": "Rename Me",
