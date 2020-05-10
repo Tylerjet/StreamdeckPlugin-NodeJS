@@ -1,0 +1,28 @@
+{
+  "Actions": [{
+    "Icon": "Icon",
+    "Name": "First Action",
+    "States": [{
+      "Image": "Image"
+    }],
+    "Tooltip": "This is an example tooltip",
+    "UUID": "com.test.action"
+  }],
+  "SDKVersion": 2,
+  "Author": "MrTylerjet",
+  "CodePath": "main.exe",
+  "PropertyInspectorPath": "index_pi.html",
+  "Description": "Testing Plugin",
+  "Name": "NodeJS Plugin Test",
+  "Icon": "Icon",
+  "Category": "Plugin Testing", 
+  "CategoryIcon": "Image",
+  "Version": "0.1",
+  "OS": [{
+    "Platform": "windows",
+    "MinimumVersion": "10"
+  }],
+  "Software": {
+    "MinimumVersion": "4.1"
+  }
+}
