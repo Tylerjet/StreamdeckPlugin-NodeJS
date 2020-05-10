@@ -3,12 +3,12 @@ WebSocket = require('ws'),
 //Place to add and store functions to help the file look cleaner hopefully and cause i want to learn how exports worked
 functions = require('./functions');
 
-//Get command line arguments and convert "-"" to "--"
+//Get command line arguments and convert "-" to "--"
 functions.cliArgs()
 
 //create array that you can call by the args name ex.) --port 1234 becomes args.port which returns 1234
 let args = minimist(process.argv.slice(2));
-console.log("Before: ",process.argv.slice(2));
+
 //Assign args to variables, Obviously
 //TODO: Validate Data, Though i don't think it would be needed since you would think 
 //the streamdeck app would make sure what it is sending is correct
@@ -18,7 +18,7 @@ PluginUUID = args.pluginUUID,
 RegisterEvent = args.registerEvent,
 Info = args.Info;
 
-//Calls the Function that i assume is usally called when linking to a JS file to connect the application to the stremdeck app.
+//Calls the Function that is usally called when linking to a JS file to connect the application to the stremdeck app.
 connectElgatoStreamDeckSocket(Port, PluginUUID, RegisterEvent, Info);
 
 function connectElgatoStreamDeckSocket(
