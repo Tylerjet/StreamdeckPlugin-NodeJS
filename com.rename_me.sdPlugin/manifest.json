@@ -1,21 +1,20 @@
 {
   "Actions": [{
     "Icon": "Icon",
-    "Name": "First Action",
+    "Name": "Renameme",
     "States": [{
       "Image": "Image"
     }],
     "Tooltip": "This is an example tooltip",
-    "UUID": "com.test.action"
+    "UUID": "com.rename_me.action"
   }],
   "SDKVersion": 2,
-  "Author": "MrTylerjet",
+  "Author": "Rename me",
   "CodePath": "main.exe",
-  "PropertyInspectorPath": "index_pi.html",
-  "Description": "Testing Plugin",
-  "Name": "NodeJS Plugin Test",
+  "Description": "Description goes here",
+  "Name": "Rename Me",
   "Icon": "Icon",
-  "Category": "Plugin Testing", 
+  "Category": "Rename Me", 
   "CategoryIcon": "Image",
   "Version": "0.1",
   "OS": [{
