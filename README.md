@@ -7,8 +7,8 @@ Allows you to run NodeJS with the elgato streamdeck by building into a compiled 
 
 # Usage
 - Run `npm run build`
-- Take the created exe and add that to your plugin folder
-- Set the "CodePath" in your plugins manifest to the exe's name
+- Take the created exe and add that to your plugin folder or to the template plugin
+- Set the "CodePath" in the plugins manifest to the exe's name
 - Build the plugin as you normally would and test your actions.
 
 # Notes
