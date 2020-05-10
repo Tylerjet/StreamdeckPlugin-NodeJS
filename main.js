@@ -1,21 +1,18 @@
 const minimist = require('minimist'),
 WebSocket = require('ws'),
-moment = require('moment'),
-fs = require('fs');
+//Place to add and store functions to help the file look cleaner hopefully and cause i want to learn how exports worked
+functions = require('./functions');
 
 //Get command line arguments and convert "-"" to "--"
-//TODO:Make a module that does this elsewhere just to cleanup the file
-let argv = [];
-for (var c = 0; c < process.argv.length; c++) {
-	if (process.argv[c].includes('-')) {
-		process.argv[c] = ('-'+process.argv[c])
-		argv.push(process.argv[c]);
-	} else {argv.push(process.argv[c])}
-}
-//create array that you can call by the args name ex.) --port 1234 becomes args.port which returns 1234
-let args = minimist(argv.slice(2));
+functions.cliArgs()
 
+//create array that you can call by the args name ex.) --port 1234 becomes args.port which returns 1234
+let args = minimist(process.argv.slice(2));
+console.log("Before: ",process.argv.slice(2));
 //Assign args to variables, Obviously
+//TODO: Validate Data, Though i don't think it would be needed since you would think 
+//the streamdeck app would make sure what it is sending is correct
+
 let Port = args.port,
 PluginUUID = args.pluginUUID,
 RegisterEvent = args.registerEvent,
@@ -37,7 +34,7 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
         };
     
         websocket.send(JSON.stringify(json));
-        writeToLog("Websocket Connected");
+        functions.writeToLog("Websocket Connected");
     };
 
     websocket.onmessage = function (evt)
@@ -47,52 +44,45 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
         //Log(JSON.stringify(jsonObj));
 
         switch (jsonObj['event']) {
-        	case "keyDown":
-        		const json = {
-            		"event": "showOk",
-            		"context": jsonObj.context
-        		};
+            case "keyDown":
+                const json = {
+                    "event": "showOk",
+                    "context": jsonObj.context
+                };
 
-        		websocket.send(JSON.stringify(json));
+                websocket.send(JSON.stringify(json));
 
-        		writeToLog(jsonObj['event'])
-        	break;
+                functions.writeToLog(jsonObj['event'])
+            break;
 
-        	case "keyUp":
-        		writeToLog(jsonObj['event'])
-        	break;
+            case "keyUp":
+                functions.writeToLog(jsonObj['event'])
+            break;
 
-        	case "willAppear":
-        		writeToLog(jsonObj['event'])
-        	break;
+            case "willAppear":
+                functions.writeToLog(jsonObj['event'])
+            break;
 
-        	case "willDisappear":
-        		writeToLog(jsonObj['event'])
-        	break;
+            case "willDisappear":
+                functions.writeToLog(jsonObj['event'])
+            break;
 
-        	case "titleParametersDidChange":
-        		writeToLog(jsonObj['event'])
-        	break;
+            case "titleParametersDidChange":
+                functions.writeToLog(jsonObj['event'])
+            break;
 
-        	case "deviceDidConnect":
-        		writeToLog(jsonObj['event'])
-        	break;
+            case "deviceDidConnect":
+                functions.writeToLog(jsonObj['event'])
+            break;
 
-        	case "deviceDidDisconnect":
-        		writeToLog(jsonObj['event'])
-        	break;
+            case "deviceDidDisconnect":
+                functions.writeToLog(jsonObj['event'])
+            break;
         }
-	}
+    }
 };
 
-//Write data to log.
-function writeToLog(data) {
-	fs.appendFile("log.txt", (moment().format('M/D/YYYY-h:mm:ss: ') + data) +"\n", (err) => {
-		if (err) {console.log(err)};
-		console.log("Log Saved!");
-	})
-}
 //Catch Errors
 process.on('uncaughtException', err => {
-	writeToLog(err);
+    functions.writeToLog(err);
 })
