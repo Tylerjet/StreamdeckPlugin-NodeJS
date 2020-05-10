@@ -21,12 +21,16 @@ Info = args.Info;
 //Calls the Function that i assume is usally called when linking to a JS file to connect the application to the stremdeck app.
 connectElgatoStreamDeckSocket(Port, PluginUUID, RegisterEvent, Info);
 
-function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, inInfo) {
+function connectElgatoStreamDeckSocket(
+    inPort, 
+    inPluginUUID, 
+    inRegisterEvent, 
+    inInfo
+) {
     // Open the web socket
    let websocket = new WebSocket("ws://localhost:" + inPort);
 
-    websocket.onopen = function()
-    {
+    websocket.onopen = function() => {
         // WebSocket is connected, register the plugin
         const json = {
             "event": inRegisterEvent,
@@ -37,8 +41,15 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
         functions.writeToLog("Websocket Connected");
     };
 
-    websocket.onmessage = function (evt)
-    {
+    websocket.onclose = (evt) => {
+        writeToLog("Websocket Closed Reason: ",evt);
+    }
+
+    websocket.onerror = (evt) => {
+        writeToLog("Websocket Error: ", evt, evt.data);
+    }
+
+    websocket.onmessage = (evt) => {
         // Received message from Stream Deck
         const jsonObj = JSON.parse(evt.data);
         //Log(JSON.stringify(jsonObj));
