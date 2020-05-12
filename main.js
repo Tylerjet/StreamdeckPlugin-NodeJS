@@ -20,16 +20,11 @@ Info = args.Info;
 //Calls the Function that is usally called when linking to a JS file from the app.
 connectElgatoStreamDeckSocket(Port, PluginUUID, RegisterEvent, Info);
 
-function connectElgatoStreamDeckSocket(
-    inPort, 
-    inPluginUUID, 
-    inRegisterEvent, 
-    inInfo
-) {
+function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, inInfo) {
     // Open the web socket
    let websocket = new WebSocket("ws://localhost:" + inPort);
 
-    websocket.onopen = function() => {
+    websocket.onopen = () => {
         // WebSocket is connected, register the plugin
         const json = {
             "event": inRegisterEvent,
@@ -59,7 +54,7 @@ function connectElgatoStreamDeckSocket(
                     "event": "setState",
                     "context": context,
                     "payload": {
-                        "state":
+                        "state": 0
                     }
                 };
                 const showOk = {
