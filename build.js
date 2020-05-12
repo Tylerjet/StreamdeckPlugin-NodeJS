@@ -1,14 +1,18 @@
 const { exec } = require('pkg'),
 fs = require('fs'),
 { execFile } = require('child_process'),
-//Change these to match your build info
+//Change Variables below to match your build info
+//Path to just before plugin folder
 DevPath = "D:\\DevelopmentProjects\\",
+//Name of the folder minuse .sdPlugin
 PluginName = "com.test",
-ExeName = "test.exe"
+ExeName = "test.exe",
+PluginJS = "test.js"
+
 
 console.log("Building EXE");
 
-exec([ 'test.js', '--target', 'win', '--output' ,'test.exe' ]).then(()=> {
+exec([PluginJS, '--target', 'win', '--output' ,ExeName]).then(()=> {
 	console.log("EXE Built!")
 	console.log("Copying File to "+DevPath+PluginName+".sdPlugin Folder");
 	fs.copyFile("test.exe",DevPath+PluginName+".sdPlugin\\"+ExeName, (err) =>{
