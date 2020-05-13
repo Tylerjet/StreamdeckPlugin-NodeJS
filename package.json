@@ -1,12 +1,12 @@
 {
   "name": "streamdeck-nodejs",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Allows you to run nodejs with the elgato streamdeck.",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "Debug":"node build.js debug",
-    "Release":"node build.js release"
+    "Debug": "node build.js debug",
+    "Release": "node build.js release"
   },
   "repository": {
     "type": "git",
