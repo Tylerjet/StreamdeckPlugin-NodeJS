@@ -13,37 +13,36 @@ exeName = "main.exe",
 pluginJS = "main.js", //name of script file if you are renaming it
 outputPath = process.argv[2];
 
-
-console.log("Building EXE");
+console.log(chalk.bgGreenBright.black("Building EXE"));
 exec([pluginJS, '--target', 'win', '--output' ,exeName]).then(()=> {
-	console.log("EXE Built!")
-	console.log("Checking if "+devPath+outputPath+" exists")
+	console.log(chalk.bgGreenBright.black("EXE Built!"))
+	console.log(chalk.bgYellowBright.black("Checking if "+devPath+outputPath+" exists"))
 	fs.ensureDir(devPath+outputPath, (err) => {
-		if(err) { console.log(err)}
+		if(err) { console.log(chalk.bgRed(err))}
 			fs.pathExists(devPath+outputPath, (err,exists) => {
-				if(exists) {console.log("Folder Exists!")}
-				if(!exists) {console.log(devPath+outputPath+" has been created")}
-	console.log("Copying"+exeName+" to "+devPath+pluginName+".sdPlugin Folder");
+				if(exists) {console.log(chalk.bgGreenBright.black(devPath+outputPath+" Exists!"))}
+				if(!exists) {console.log(chalk.bgYellowBright.black(devPath+outputPath+" has been created"))}
+	console.log(chalk.bgBlueBright.black("Copying "+exeName+" to "+devPath+pluginName+".sdPlugin Folder"));
 	fs.copy(exeName ,devPath+pluginName+".sdPlugin\\"+exeName, {'overwrite': true}, (err) =>{
-		if (err) {console.log(err)}
-		console.log(exeName+" Copied!")
+		if (err) {console.log(chalk.bgRed(err))}
+		console.log(chalk.bgGreenBright.black(exeName+" Copied!"))
 		fs.remove(devPath+outputPath+'\\'+pluginName+'.streamDeckPlugin', (err) => {
-			if (err) {console.log(err)}
+			if (err) {console.log(chalk.bgRed(err))}
 			})
-			console.log("Old Plugin deleted from: ",devPath+outputPath)
+			console.log(chalk.bgRedBright.black("Old Plugin deleted from: ",devPath+outputPath))
 			const zipPath = path.resolve('./DistributionToolWindows.zip')
 			const file = fs.createWriteStream(zipPath);
-			console.log("Getting Distribution Tool")
+			console.log(chalk.bgBlueBright.black("Getting Distribution Tool"))
 			http.get("https://developer.elgato.com/documentation/stream-deck/distributiontool/DistributionToolWindows.zip", (response) => {
 				response.pipe(file);
 				file.on("finish", () => {
-					console.log("Unzipping DistributionTool file");
+					console.log(chalk.bgBlueBright.black("Unzipping DistributionTool file"));
 					extract('./DistributionToolWindows.zip', {dir: process.cwd()}).then(() => {
-						console.log("File Extracted!")
-						console.log("Building New Plugin!")
+						console.log(chalk.bgGreenBright.black("File Extracted!"))
+						console.log(chalk.bgBlueBright.black("Building New Plugin!"))
 						const child = execFile(devPath+'DistributionTool.exe', ['-b','-i', devPath+pluginName+'.sdPlugin','-o',devPath+outputPath], (err, stdout, stderr) => {
-		  				if (err) {console.log(err)}
-		  					console.log(stdout)
+		  				if (err) {console.log(chalk.bgRed(err))}
+		  					console.log(chalk.bgGreenBright.black(stdout))
 							})
 						})
 					})
