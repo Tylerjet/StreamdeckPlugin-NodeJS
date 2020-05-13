@@ -6,7 +6,7 @@
       "Image": "Image"
     }],
     "Tooltip": "This is an example tooltip",
-    "UUID": "com.rename_me.action"
+    "UUID": "com.rename-me.action"
   }],
   "SDKVersion": 2,
   "Author": "Rename Me",

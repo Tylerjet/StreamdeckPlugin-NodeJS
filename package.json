@@ -5,8 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "debug": "node build.js debug",
-    "release": "node build.js release"
+    "build": "node build.js release"
   },
   "repository": {
     "type": "git",
@@ -19,6 +18,8 @@
   },
   "homepage": "https://github.com/Tylerjet/Streamdeck-NodeJS#readme",
   "dependencies": {
+    "extract-zip": "^2.0.0",
+    "fs-extra": "^9.0.0",
     "minimist": "^1.2.5",
     "moment": "^2.25.3",
     "pkg": "^4.4.8",
