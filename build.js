@@ -4,6 +4,7 @@ fs = require('fs-extra'),
 path = require('path'),
 http = require('https'),
 extract = require('extract-zip'),
+chalk = require('chalk'),
 //Change Variables below to match your build info
 //Path to just before .sdPlugin folder that you are building
 devPath = ".\\", //make sure to add \\ at the end *Note* ".\\"" will build in the same folder as the script and sdPlugin folder when first downloaded.
