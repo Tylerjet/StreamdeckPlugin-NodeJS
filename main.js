@@ -50,20 +50,12 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
 
         switch (jsonObj['event']) {
             case "keyDown":
-                const setState = {
-                    "event": "setState",
-                    "context": context,
-                    "payload": {
-                        "state": 0
-                    }
-                };
                 const showOk = {
                     "event": "showOk",
                     "context": context
                 };
 
                 websocket.send(JSON.stringify(showOk));
-
                 functions.writeToLog(jsonObj['event'])
             break;
 
