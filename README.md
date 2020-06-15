@@ -17,7 +17,7 @@ Allows you to run NodeJS with the elgato streamdeck by building into a compiled 
 
 ## Building into existing plugin 
 - Edit `build.js` in your favorite text editor and edit `pluginName` to your plugins folder name and `devPath` to the path just before your plugin folder
-- Create your plugin `main.js` is supplied as a template and base to build off of
+- Create your plugin. (`main.js` is supplied as a template and base to build off of)
 - run `npm run build"
 
 # Notes
