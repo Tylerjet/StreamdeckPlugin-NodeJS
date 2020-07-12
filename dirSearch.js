@@ -1,6 +1,7 @@
 var path = require('path'), 
     fs   = require('fs'),
     dirSearch = require('./dirSearch.js'),
+    results = [],
     //ssPath = dirSearch(process.pkg.path.resolve()+'\\node_modules',/\.exe$/)[0],
     cPath = process.cwd();
 
@@ -13,38 +14,60 @@ var path = require('path'),
  * @return {Array}               Result files with path string in an array
  */
 function findFilesInDir(startPath,filter){
-
-    var results = [];
+    var files=fs.readdirSync(startPath);
 
     if (!fs.existsSync(startPath)){
         console.log("no dir ",startPath);
         return;
     }
 
-    var files=fs.readdirSync(startPath);
-    for(var i=0;i<files.length;i++){
-        var filename=path.join(startPath,files[i]);
-        var stat = fs.lstatSync(filename);
-        if (stat.isDirectory()){
-            results = results.concat(findFilesInDir(filename,filter)); //recurse
-        }
-        else if (filter.test(filename)) {
+    files.forEach(function(file) {
+        var filename=path.join(startPath,file);
+        if(fs.lstatSync(filename).isDirectory()){
+            inDirectory(filename,filter)
+        } else if (filter.test(filename)) {
             console.log('-- found: ',filename);
-            results.push(filename);
+            results.push(filename)
+            console.log("Passed Filter:",results)
         }
-    }
+    })
+    console.log("findFilesInDir:",results)
     return copyFiles(results);
 }
 
+function inDirectory(fileDir, filter) {
+    var files=fs.readdirSync(fileDir);
+
+    files.forEach(function(file) {
+            var filename=path.join(fileDir,file);
+            if(fs.lstatSync(filename).isDirectory()){
+                inDirectory(filename,filter)
+            } else if (filter.test(filename)) {
+                console.log('-- found: ',filename);
+                results.push(filename)
+                console.log("Passed Filter in Directory Function:",results)
+            }
+        })
+    return results
+}
+
 function copyFiles(fileArr) {
+    console.log("Copy File Area:",fileArr)
     for (let Item in fileArr) {
     console.log(fileArr[Item]);
-        //let copy = fs.createReadStream(fileArr[Item]).pipe(fs.createWriteStream(cPath), { end: true });
-        console.log(path.parse(fileArr[Item]))
+    console.log(path.parse(fileArr[Item]).base)
+    var file = path.parse(fileArr[Item]).base
+    copyPath = path.join(cPath,file)
+    let copy = fs.createReadStream(fileArr[Item]).pipe(fs.createWriteStream(copyPath), { end: true });
     copy.on('close', () => {
         console.log("file",fileArr[Item],"Copied")
     })
+    
 }
+}
+
+process.on('uncaughtException', err => {
+    console.log(err)
 }
 
 module.exports = findFilesInDir;
