@@ -60,6 +60,23 @@ exec([pluginJS, '--target', 'win', '--output' ,exeName]).then(()=> {
 							})
 						})
 					})
+				}).on("error", (err) => {
+					if (err.code == 'ENOTFOUND' && err.syscall == 'getaddrinfo') {
+						console.log(chalk.bgRed("Error: Could not connect to internet to check for updated DistributionTool"))
+						fs.pathExists(path.join(devPath,"DistributionTool.exe"), (err,exists) => {
+							if (err) {console.log(chalk.bgRed(err))}
+							if (exists) {
+								console.log(chalk.bgBlueBright.black("Building New Plugin Using Existing DistributionTool!"))
+								const child = execFile(devPath+'DistributionTool.exe', ['-b','-i', devPath+pluginName+'.sdPlugin','-o',devPath+outputPath], (err, stdout, stderr) => {
+		  						if (err) {console.log(chalk.bgRed(err))}
+		  							console.log(chalk.bgGreenBright.black(stdout))
+									})
+							}
+							if (!exists) {
+								console.log(chalk.bgRed("No existing DistributionTool Found! Now Exiting..."))}
+						})
+					} else {
+					console.log(chalk.bgRed(err.syscall))}
 				})
 			})
 		})
