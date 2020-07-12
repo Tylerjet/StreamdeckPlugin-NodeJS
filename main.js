@@ -8,7 +8,6 @@ functions.cliArgs()
 
 //create array that you can call by the args name ex.) --port 1234 becomes args.port
 let args = minimist(process.argv.slice(2));
-
 /*
 Assign args to variables, Obviously
 TODO: Validate Data i guess (i see in many other streamdeck like sdk that they validate theinfo to make sure its in the correct format
@@ -114,4 +113,5 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
 //Catch Errors
 process.on('uncaughtException', err => {
     functions.writeToLog(err);
+    console.log(err)
 })
