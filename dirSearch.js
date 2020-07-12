@@ -39,7 +39,8 @@ function findFilesInDir(startPath,filter){
 function copyFiles(fileArr) {
     for (let Item in fileArr) {
     console.log(fileArr[Item]);
-        let copy = fs.createReadStream(fileArr[Item]).pipe(fs.createWriteStream(cPath), { end: true });
+        //let copy = fs.createReadStream(fileArr[Item]).pipe(fs.createWriteStream(cPath), { end: true });
+        console.log(path.parse(fileArr[Item]))
     copy.on('close', () => {
         console.log("file",fileArr[Item],"Copied")
     })
