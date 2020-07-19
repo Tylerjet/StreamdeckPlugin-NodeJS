@@ -22,3 +22,6 @@ Allows you to run NodeJS with the elgato streamdeck by building into a compiled 
 
 # Notes
 There may be things that could have been done better but im still learning as i go.
+
+# Known Issues
+Certain Files (.EXE files for sure have the issue but that is being looked into) and possibly other non JS/JSON Files have a chance of having issues with being read/run inside of the snapshot after being packaged.
