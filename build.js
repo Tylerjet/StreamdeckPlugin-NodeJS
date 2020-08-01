@@ -73,7 +73,7 @@ exec([pluginJS, '--target', 'win', '--output' ,exeName]).then(()=> {
 									})
 							}
 							if (!exists) {
-								console.log(chalk.bgRed("No existing DistributionTool Found! Now Exiting..."))}
+								console.log(chalk.bgRed("No existing DistributionTool Found! Cannot proceed with build...Now exiting"))}
 						})
 					} else {
 					console.log(chalk.bgRed(err.syscall))}
