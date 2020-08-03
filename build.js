@@ -18,8 +18,8 @@ const devPath = ".\\", //make sure to add \\ at the end *Note* ".\\"" will build
 pluginName = "com.rename-me", //com.(name of plugin)
 exeName = "main.exe",
 pluginJS = "main.js", //name of script file if you are renaming it
-outputPath = process.argv[2]; //The folder you want to output the final plugin too, this is set to release in the build command in package.json
-
+outputPath = process.argv[2], //The folder you want to output the final plugin too, this is set to release in the build command in package.json
+zipPath = path.resolve('./DistributionToolWindows.zip');
 // Makes my life a little easier and the code just a tad cleaner :Shrug:
 function buildPlugin() {
 	const child = execFile(devPath+'DistributionTool.exe', ['-b','-i', devPath+pluginName+'.sdPlugin','-o',devPath+outputPath], (err, stdout, stderr) => {
@@ -61,7 +61,6 @@ exec([pluginJS, '--target', 'win', '--output' ,exeName]).then(()=> {
 			console.log(chalk.bgRedBright.black("Old Plugin deleted from: ",devPath+outputPath))
 
 			//Download and extract the latest distribution tool for windows from elgatos site directly
-			const zipPath = path.resolve('./DistributionToolWindows.zip')
 			console.log(chalk.bgBlueBright.black("Getting Distribution Tool"))
 			http.get("https://developer.elgato.com/documentation/stream-deck/distributiontool/DistributionToolWindows.zip", (response) => {
 				response.on('data', function (data) {
