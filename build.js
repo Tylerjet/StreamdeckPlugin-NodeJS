@@ -32,9 +32,8 @@ function buildPlugin() {
 function writeZip(data) {
     fs.writeFile(zipPath, data,{encoding: 'utf8'}, (err) => {
         if (err) {console.log(err)}
-        console.log(chalk.bgGreenBright.black("File Download Complete!"))
-	})
-	console.log(chalk.bgBlueBright.black("Unzipping DistributionTool file"));
+		console.log(chalk.bgGreenBright.black("File Download Complete!"))
+		console.log(chalk.bgBlueBright.black("Unzipping DistributionTool file"));
 
 	//Extract the Distribution exe
 	extract('./DistributionToolWindows.zip', {dir: process.cwd()}).then(() => {
@@ -44,6 +43,7 @@ function writeZip(data) {
 		console.log(chalk.bgBlueBright.black("Building New Plugin!"))
 		buildPlugin()
 		})
+	})
 }
 
 // ---------------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ exec([pluginJS, '--target', 'win', '--output' ,exeName]).then(()=> {
                     file = fs.createReadStream('DistributionToolWindows.zip')
                     file.on('error', (err) => {
                         if (err.code == "ENOENT") {
-							console.log(chalk.bgRed("Existing file not found now downloading!"))
+							console.log(chalk.bgRed("Tool does not yet exist now downloading!"))
 							writeZip(CompBuffer)
                         }
                     })
