@@ -20,13 +20,13 @@ exeName = "main.exe",
 pluginJS = "main.js", //name of script file if you are renaming it
 outputPath = process.argv[2], //The folder you want to output the final plugin too, this is set to release in the build command in package.json
 zipPath = path.resolve('./DistributionToolWindows.zip');
+
 // Makes my life a little easier and the code just a tad cleaner :Shrug:
 function buildPlugin() {
 	const child = execFile(devPath+'DistributionTool.exe', ['-b','-i', devPath+pluginName+'.sdPlugin','-o',devPath+outputPath], (err, stdout, stderr) => {
 		if (err) {console.log(chalk.bgRed(err))}
 			console.log(chalk.bgGreenBright.black(stdout))
 		  })
-		  return
 }
 
 function writeZip(data) {
@@ -34,8 +34,18 @@ function writeZip(data) {
         if (err) {console.log(err)}
         console.log(chalk.bgGreenBright.black("File Download Complete!"))
 	})
-	return
+	console.log(chalk.bgBlueBright.black("Unzipping DistributionTool file"));
+
+	//Extract the Distribution exe
+	extract('./DistributionToolWindows.zip', {dir: process.cwd()}).then(() => {
+		console.log(chalk.bgGreenBright.black("File Extracted!"))
+
+		//Build the plugin
+		console.log(chalk.bgBlueBright.black("Building New Plugin!"))
+		buildPlugin()
+		})
 }
+
 // ---------------------------------------------------------------------------------------
 console.log(chalk.bgGreenBright.black("Building EXE"));
 //Build the executable using the JS Script listed in pluginJS
@@ -79,7 +89,7 @@ exec([pluginJS, '--target', 'win', '--output' ,exeName]).then(()=> {
                     file.on('error', (err) => {
                         if (err.code == "ENOENT") {
 							console.log(chalk.bgRed("Existing file not found now downloading!"))
-                            writeZip(CompBuffer)
+							writeZip(CompBuffer)
                         }
                     })
                     file.on('data', (data) => {
@@ -88,20 +98,20 @@ exec([pluginJS, '--target', 'win', '--output' ,exeName]).then(()=> {
                     file.on('end', () => {
                         existHash = hashExist.digest('hex')
                         if (newHash == existHash) {
-                            console.log(chalk.bgGreenBright.black("Application already up to date!"))
+							console.log(chalk.bgGreenBright.black("Application already up to date!"))
+							console.log(chalk.bgBlueBright.black("Unzipping DistributionTool file"));
+
+							//Extract the Distribution exe
+							extract('./DistributionToolWindows.zip', {dir: process.cwd()}).then(() => {
+								console.log(chalk.bgGreenBright.black("File Extracted!"))
+						
+								//Build the plugin
+								console.log(chalk.bgBlueBright.black("Building New Plugin!"))
+								buildPlugin()
+								})
                         } else {
                             writeZip(CompBuffer)
 						}
-						console.log(chalk.bgBlueBright.black("Unzipping DistributionTool file"));
-
-						//Extract the Distribution exe
-						extract('./DistributionToolWindows.zip', {dir: process.cwd()}).then(() => {
-							console.log(chalk.bgGreenBright.black("File Extracted!"))
-	
-							//Build the plugin
-							console.log(chalk.bgBlueBright.black("Building New Plugin!"))
-							buildPlugin()
-							})
 						})
 					})
 					}).on("error", (err) => {
