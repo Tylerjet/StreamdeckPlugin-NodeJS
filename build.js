@@ -76,6 +76,7 @@ exec([pluginJS, '--target', 'win', '--output' ,exeName]).then(()=> {
                     file = fs.createReadStream('DistributionToolWindows.zip')
                     file.on('error', (err) => {
                         if (err.code == "ENOENT") {
+							console.log(chalk.bgRed("Existing file not found now downloading!"))
                             writeZip(CompBuffer)
                         }
                     })
@@ -84,8 +85,6 @@ exec([pluginJS, '--target', 'win', '--output' ,exeName]).then(()=> {
                     })
                     file.on('end', () => {
                         existHash = hashExist.digest('hex')
-                        console.log(existHash)
-                        console.log(newHash == existHash)
                         if (newHash == existHash) {
                             console.log(chalk.bgGreenBright.black("Application already up to date!"))
                         } else {
