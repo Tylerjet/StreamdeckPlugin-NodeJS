@@ -55,7 +55,6 @@ exec([pluginJS, '--target', 'win', '--output' ,exeName]).then(()=> {
 
 			//Download and extract the latest distribution tool for windows from elgatos site directly
 			const zipPath = path.resolve('./DistributionToolWindows.zip')
-			const file = fs.createWriteStream(zipPath);
 			console.log(chalk.bgBlueBright.black("Getting Distribution Tool"))
 			http.get("https://developer.elgato.com/documentation/stream-deck/distributiontool/DistributionToolWindows.zip", (response) => {
 				response.on('data', function (data) {
