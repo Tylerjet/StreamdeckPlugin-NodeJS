@@ -26,13 +26,15 @@ function buildPlugin() {
 		if (err) {console.log(chalk.bgRed(err))}
 			console.log(chalk.bgGreenBright.black(stdout))
 		  })
+		  return
 }
 
 function writeZip(data) {
     fs.writeFile(zipPath, data,{encoding: 'utf8'}, (err) => {
         if (err) {console.log(err)}
         console.log(chalk.bgGreenBright.black("File Download Complete!"))
-    })
+	})
+	return
 }
 // ---------------------------------------------------------------------------------------
 console.log(chalk.bgGreenBright.black("Building EXE"));
