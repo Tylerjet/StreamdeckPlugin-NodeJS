@@ -9,7 +9,7 @@ chalk = require('chalk'),
 crypto = require('crypto'),
 hashNew = crypto.createHash('md5'),
 hashExist = crypto.createHash('md5'),
-var buffers = [],CompBuffer,
+buffers = [],CompBuffer,
 //Change Variables below to match your build info
 //Path to just before .sdPlugin folder that you are building
 devPath = ".\\", //make sure to add \\ at the end *Note* ".\\"" will build in the same folder as the script and sdPlugin folder when first downloaded.
