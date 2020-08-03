@@ -31,7 +31,7 @@ function buildPlugin() {
 function writeZip(data) {
     fs.writeFile(zipPath, data,{encoding: 'utf8'}, (err) => {
         if (err) {console.log(err)}
-        console.log(chalk.bgGreenBright.black(("File Download Complete!"))
+        console.log(chalk.bgGreenBright.black("File Download Complete!"))
     })
 }
 // ---------------------------------------------------------------------------------------
