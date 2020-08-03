@@ -28,6 +28,13 @@ function buildPlugin() {
 		  })
 }
 
+function writeZip(data) {
+    fs.writeFile(zipPath, data,{encoding: 'utf8'}, (err) => {
+        if (err) {console.log(err)}
+        console.log(chalk.bgGreenBright.black(("File Download Complete!"))
+    })
+}
+// ---------------------------------------------------------------------------------------
 console.log(chalk.bgGreenBright.black("Building EXE"));
 //Build the executable using the JS Script listed in pluginJS
 exec([pluginJS, '--target', 'win', '--output' ,exeName]).then(()=> { 
@@ -66,7 +73,6 @@ exec([pluginJS, '--target', 'win', '--output' ,exeName]).then(()=> {
 					CompBuffer = Buffer.concat(buffers)
                     var newHash,existHash
                     newHash = hashNew.digest('hex')
-                    console.log("File Hash From internet:", newHash)
 
                     file = fs.createReadStream('DistributionToolWindows.zip')
                     file.on('error', (err) => {
@@ -82,7 +88,7 @@ exec([pluginJS, '--target', 'win', '--output' ,exeName]).then(()=> {
                         console.log(existHash)
                         console.log(newHash == existHash)
                         if (newHash == existHash) {
-                            console.log("Application already up to date!")
+                            console.log(chalk.bgGreenBright.black("Application already up to date!"))
                         } else {
                             writeZip(CompBuffer)
 						}
