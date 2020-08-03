@@ -5,6 +5,11 @@ path = require('path'),
 http = require('https'),
 extract = require('extract-zip'),
 chalk = require('chalk'),
+//Used for Checking if the md5 of the file online has beenupdated since zip files do not have a version number
+crypto = require('crypto'),
+hashNew = crypto.createHash('md5'),
+hashExist = crypto.createHash('md5'),
+var buffers = [],CompBuffer,
 //Change Variables below to match your build info
 //Path to just before .sdPlugin folder that you are building
 devPath = ".\\", //make sure to add \\ at the end *Note* ".\\"" will build in the same folder as the script and sdPlugin folder when first downloaded.
@@ -13,6 +18,14 @@ pluginName = "com.rename-me", //com.(name of plugin)
 exeName = "main.exe",
 pluginJS = "main.js", //name of script file if you are renaming it
 outputPath = process.argv[2]; //The folder you want to output the final plugin too, this is set to release in the build command in package.json
+
+// Makes my life a little easier and the code just a tad cleaner :Shrug:
+function buildPlugin() {
+	const child = execFile(devPath+'DistributionTool.exe', ['-b','-i', devPath+pluginName+'.sdPlugin','-o',devPath+outputPath], (err, stdout, stderr) => {
+		if (err) {console.log(chalk.bgRed(err))}
+			console.log(chalk.bgGreenBright.black(stdout))
+		  })
+}
 
 console.log(chalk.bgGreenBright.black("Building EXE"));
 //Build the executable using the JS Script listed in pluginJS
@@ -44,39 +57,61 @@ exec([pluginJS, '--target', 'win', '--output' ,exeName]).then(()=> {
 			const file = fs.createWriteStream(zipPath);
 			console.log(chalk.bgBlueBright.black("Getting Distribution Tool"))
 			http.get("https://developer.elgato.com/documentation/stream-deck/distributiontool/DistributionToolWindows.zip", (response) => {
-				response.pipe(file);
-				file.on("finish", () => {
-					console.log(chalk.bgBlueBright.black("Unzipping DistributionTool file"));
+				response.on('data', function (data) {
+                    buffers.push(data)
+                    hashNew.update(data, 'utf8')
+                })
 
-					//Extract the Distribution exe
-					extract('./DistributionToolWindows.zip', {dir: process.cwd()}).then(() => {
-						console.log(chalk.bgGreenBright.black("File Extracted!"))
+				response.on('end', function(){
+					CompBuffer = Buffer.concat(buffers)
+                    var newHash,existHash
+                    newHash = hashNew.digest('hex')
+                    console.log("File Hash From internet:", newHash)
 
-						//Build the plugin
-						console.log(chalk.bgBlueBright.black("Building New Plugin!"))
-						const child = execFile(devPath+'DistributionTool.exe', ['-b','-i', devPath+pluginName+'.sdPlugin','-o',devPath+outputPath], (err, stdout, stderr) => {
-		  				if (err) {console.log(chalk.bgRed(err))}
-		  					console.log(chalk.bgGreenBright.black(stdout))
+                    file = fs.createReadStream('DistributionToolWindows.zip')
+                    file.on('error', (err) => {
+                        if (err.code == "ENOENT") {
+                            writeZip(CompBuffer)
+                        }
+                    })
+                    file.on('data', (data) => {
+                        hashExist.update(data, 'utf8')
+                    })
+                    file.on('end', () => {
+                        existHash = hashExist.digest('hex')
+                        console.log(existHash)
+                        console.log(newHash == existHash)
+                        if (newHash == existHash) {
+                            console.log("Application already up to date!")
+                        } else {
+                            writeZip(CompBuffer)
+						}
+						console.log(chalk.bgBlueBright.black("Unzipping DistributionTool file"));
+
+						//Extract the Distribution exe
+						extract('./DistributionToolWindows.zip', {dir: process.cwd()}).then(() => {
+							console.log(chalk.bgGreenBright.black("File Extracted!"))
+	
+							//Build the plugin
+							console.log(chalk.bgBlueBright.black("Building New Plugin!"))
+							buildPlugin()
 							})
 						})
 					})
-				}).on("error", (err) => {
-					if (err.code == 'ENOTFOUND' && err.syscall == 'getaddrinfo') {
-						console.log(chalk.bgRed("Error: Could not connect to internet to check for updated DistributionTool"))
-						fs.pathExists(path.join(devPath,"DistributionTool.exe"), (err,exists) => {
-							if (err) {console.log(chalk.bgRed(err))}
-							if (exists) {
-								console.log(chalk.bgBlueBright.black("Building New Plugin Using Existing DistributionTool!"))
-								const child = execFile(devPath+'DistributionTool.exe', ['-b','-i', devPath+pluginName+'.sdPlugin','-o',devPath+outputPath], (err, stdout, stderr) => {
-		  						if (err) {console.log(chalk.bgRed(err))}
-		  							console.log(chalk.bgGreenBright.black(stdout))
-									})
-							}
-							if (!exists) {
-								console.log(chalk.bgRed("No existing DistributionTool Found! Cannot proceed with build...Now exiting"))}
-						})
-					} else {
-					console.log(chalk.bgRed(err.syscall))}
+					}).on("error", (err) => {
+						if (err.code == 'ENOTFOUND' && err.syscall == 'getaddrinfo') {
+							console.log(chalk.bgRed("Error: Could not connect to internet to check for updated DistributionTool"))
+							fs.pathExists(path.join(devPath,"DistributionTool.exe"), (err,exists) => {
+								if (err) {console.log(chalk.bgRed(err))}
+								if (exists) {
+									console.log(chalk.bgBlueBright.black("Building New Plugin Using Existing DistributionTool!"))
+									buildPlugin()
+								}
+								if (!exists) {
+									console.log(chalk.bgRed("No existing DistributionTool Found! Cannot proceed with build...Now exiting"))}
+							})
+						} else {
+						console.log(chalk.bgRed(err.syscall))}
 				})
 			})
 		})
