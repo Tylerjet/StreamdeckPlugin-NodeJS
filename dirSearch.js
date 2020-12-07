@@ -1,8 +1,6 @@
 var path = require('path'), 
     fs   = require('fs'),
-    dirSearch = require('./dirSearch.js'),
     results = [],
-    //ssPath = dirSearch(process.pkg.path.resolve()+'\\node_modules',/\.exe$/)[0],
     cPath = process.cwd();
 
 
@@ -26,12 +24,12 @@ function findFilesInDir(startPath,filter){
         if(fs.lstatSync(filename).isDirectory()){
             inDirectory(filename,filter)
         } else if (filter.test(filename)) {
-            console.log('-- found: ',filename);
+            //console.log('-- found: ',filename);
             results.push(filename)
-            console.log("Passed Filter:",results)
+            //console.log("Passed Filter:",results)
         }
     })
-    console.log("findFilesInDir:",results)
+    //console.log("findFilesInDir:",results)
     return copyFiles(results);
 }
 
@@ -43,16 +41,16 @@ function inDirectory(fileDir, filter) {
             if(fs.lstatSync(filename).isDirectory()){
                 inDirectory(filename,filter)
             } else if (filter.test(filename)) {
-                console.log('-- found: ',filename);
+                //console.log('-- found: ',filename);
                 results.push(filename)
-                console.log("Passed Filter in Directory Function:",results)
+                //console.log("Passed Filter in Directory Function:",results)
             }
         })
     return results
 }
 
 function copyFiles(fileArr) {
-    console.log("Copy File Area:",fileArr)
+    //console.log("Copy File Area:",fileArr)
     for (let Item in fileArr) {
     console.log(fileArr[Item]);
     console.log(path.parse(fileArr[Item]).base)
