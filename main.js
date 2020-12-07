@@ -10,7 +10,7 @@ functions.cliArgs()
 let args = minimist(process.argv.slice(2));
 /*
 Assign args to variables, Obviously
-TODO: Validate Data i guess (i see in many other streamdeck like sdk that they validate theinfo to make sure its in the correct format
+TODO: Validate Data i guess (i see in many other streamdeck like sdks that they validate theinfo to make sure its in the correct format
 but unless in the future elgato changes that the data should stay the same so im not sure if there is a real need for it :shrug:)
 */
 let Port = args.port,
@@ -20,7 +20,7 @@ Info = args.Info;
 
 /*
 Called by streamdeck when plugin is added to initiate the connection, same as building a js only version from here on out for the most part, besides the fact that
-you can use any node module obviously
+you can use almost any node module obviously
 */
 connectElgatoStreamDeckSocket(Port, PluginUUID, RegisterEvent, Info);
 
