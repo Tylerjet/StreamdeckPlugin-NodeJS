@@ -21,6 +21,7 @@ const pluginJS = 'main.js'; // name of script file if you are renaming it
 const outputPath = devPath + process.argv[2]; // The folder you want to output the final plugin too, this is set to release in the build command in package.json
 const zipPath = path.resolve('./DistributionToolWindows.zip');
 const pluginPath = devPath + pluginName + '.sdPlugin';
+
 // Makes my life a little easier and the code just a tad cleaner :Shrug:
 function buildPlugin() {
   execFile(

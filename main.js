@@ -1,17 +1,20 @@
 const minimist = require('minimist');
 const WebSocket = require('ws');
-// functions store to help the file look cleaner and to easily add new functions if needed
-const functions = require('./functions');
+
+// functions storage to help the file look cleaner and to easily add new functions if needed without making this file longer than nessacary.
+// eslint-disable-next-line no-unused-vars
+const { cliArgs, writeToLog, inPkg } = require('./functions');
+
 // If you have a module that uses exe files Ex.) nircmd use this to extract it to the cwd, see README.md for more info on how to call/modify the call for these files so they can run properly.
-/*
-const { inPkg } = require('./functions');
-inPkg(__dirname + '\\node_modules', undefined, /\.exe$/);
-*/
+
+// inPkg(__dirname + '\\node_modules', undefined, /\.exe$/);
+
 // Convert "-" to "--" from process argv to make compatable with minimist
-functions.cliArgs();
+cliArgs();
 
 // create array that you can call by the args name ex.) --port 1234 becomes args.port
 const args = minimist(process.argv.slice(2));
+
 /*
 Assign args to variables, Obviously
 TODO: Validate Data i guess (i see in many other streamdeck like sdks that they validate theinfo to make sure its in the correct format
@@ -21,6 +24,8 @@ const Port = args.port;
 const PluginUUID = args.pluginUUID;
 const RegisterEvent = args.registerEvent;
 const Info = args.Info;
+
+/* Insert any custom node module requires here */
 
 /*
 Called by streamdeck when plugin is added to initiate the connection, same as building a js only version from here on out for the most part, besides the fact that
@@ -35,7 +40,8 @@ function connectElgatoStreamDeckSocket(
   inInfo,
 ) {
   // Open the web socket
-  const websocket = new WebSocket('ws://localhost:' + inPort);
+  // Use websocket since i know know localhost takes 300ms to resolve
+  const websocket = new WebSocket('ws://127.0.0.1:' + inPort);
 
   websocket.onopen = () => {
     // WebSocket is connected, register the plugin
@@ -45,15 +51,15 @@ function connectElgatoStreamDeckSocket(
     };
 
     websocket.send(JSON.stringify(json));
-    functions.writeToLog('Websocket Connected');
+    writeToLog('Websocket Connected');
   };
 
   websocket.onclose = (evt) => {
-    functions.writeToLog('Websocket Closed Reason: ', evt);
+    writeToLog('Websocket Closed Reason: ', evt);
   };
 
   websocket.onerror = (evt) => {
-    functions.writeToLog('Websocket Error: ', evt, evt.data);
+    writeToLog('Websocket Error: ', evt, evt.data);
   };
   // Remove and keep what you need here just added most of what is emitted from the streamdeck at any given time from either and action or from clicking on the button in the software
   websocket.onmessage = (evt) => {
@@ -73,57 +79,57 @@ function connectElgatoStreamDeckSocket(
       }
 
       case 'keyUp': {
-        functions.writeToLog(jsonObj.event);
+        writeToLog(jsonObj.event);
         break;
       }
 
       case 'willAppear': {
-        functions.writeToLog(jsonObj.event);
+        writeToLog(jsonObj.event);
         break;
       }
 
       case 'willDisappear': {
-        functions.writeToLog(jsonObj.event);
+        writeToLog(jsonObj.event);
         break;
       }
 
       case 'titleParametersDidChange': {
-        functions.writeToLog(jsonObj.event);
+        writeToLog(jsonObj.event);
         break;
       }
 
       case 'deviceDidConnect': {
-        functions.writeToLog(jsonObj.event);
+        writeToLog(jsonObj.event);
         break;
       }
 
       case 'deviceDidDisconnect': {
-        functions.writeToLog(jsonObj.event);
+        writeToLog(jsonObj.event);
         break;
       }
 
       case 'didReceiveSettings': {
-        functions.writeToLog(jsonObj.event);
+        writeToLog(jsonObj.event);
         break;
       }
 
       case 'didReceiveGlobalSettings': {
-        functions.writeToLog(jsonObj.event);
+        writeToLog(jsonObj.event);
         break;
       }
 
       case 'propertyInspectorDidAppear': {
-        functions.writeToLog(jsonObj.event);
+        writeToLog(jsonObj.event);
         break;
       }
 
       case 'propertyInspectorDidDisappear': {
-        functions.writeToLog(jsonObj.event);
+        writeToLog(jsonObj.event);
         break;
       }
 
       case 'sendToPlugin': {
-        functions.writeToLog(jsonObj.event);
+        writeToLog(jsonObj.event);
         break;
       }
     }
@@ -132,6 +138,6 @@ function connectElgatoStreamDeckSocket(
 
 // Catch Errors
 process.on('uncaughtException', (err) => {
-  functions.writeToLog(err);
+  writeToLog(err);
   console.log(err);
 });
