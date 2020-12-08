@@ -40,7 +40,7 @@ function connectElgatoStreamDeckSocket(
   inInfo,
 ) {
   // Open the web socket
-  // Use websocket since i know know localhost takes 300ms to resolve
+  // Use websocket since i now learned localhost takes 300ms to resolve apparently
   const websocket = new WebSocket('ws://127.0.0.1:' + inPort);
 
   websocket.onopen = () => {

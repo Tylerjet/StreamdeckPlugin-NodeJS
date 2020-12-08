@@ -17,12 +17,12 @@ const devPath = '.\\'; // make sure to add \\ at the end *Note* ".\\"" will buil
 // Name of the folder minus .sdPlugin
 const pluginName = 'com.rename-me'; // com.(name of plugin)
 const exeName = 'main.exe';
-const pluginJS = 'main.js'; // name of script file if you are renaming it
+const pluginJS = 'package.json'; // set the script in the bin key of package.json (default is main.js)
 const outputPath = devPath + process.argv[2]; // The folder you want to output the final plugin too, this is set to release in the build command in package.json
 const zipPath = path.resolve('./DistributionToolWindows.zip');
 const pluginPath = devPath + pluginName + '.sdPlugin';
 
-// Makes my life a little easier and the code just a tad cleaner :Shrug:
+// Makes my life a little easier than having to edit in 4 seperate locations and the code just a tad cleaner :Shrug:
 function buildPlugin() {
   execFile(
     devPath + 'DistributionTool.exe',
@@ -101,8 +101,7 @@ exec([pluginJS, '--target', 'win', '--output', exeName])
           );
           console.log(
             chalk.bgRedBright.black(
-              'Old Plugin deleted from: ',
-              outputPath,
+              'Old Plugin deleted from: ' + outputPath,
             ),
           );
 
