@@ -64,123 +64,109 @@ console.log(chalk.bgGreenBright.black('Building EXE'));
 exec([pluginJS, '--target', 'win', '--output', exeName])
   .then(() => {
     console.log(chalk.bgGreenBright.black('EXE Built!'));
-    console.log(
-      chalk.bgYellowBright.black(
-        'Checking if ' + outputPath + ' exists',
-      ),
-    );
+
     //checking if the output folder already exists if it doesn't it will create it
     fs.ensureDir(outputPath, (err) => {
       if (err) {
         console.log(chalk.bgRed(err));
       }
 
-      fs.pathExists(outputPath, (err, exists) => {
-        if (exists) {
+      //Copy the created exe to the .sdPlugin folder
+      console.log(
+        chalk.bgBlueBright.black(
+          'Copying ' + exeName + ' to ' + pluginPath,
+        ),
+      );
+      fs.copy(
+        exeName,
+        pluginPath + '\\' + exeName,
+        { overwrite: true },
+        (err) => {
+          if (err) {
+            console.log(chalk.bgRed(err));
+          }
           console.log(
-            chalk.bgGreenBright.black(outputPath + ' Exists!'),
+            chalk.bgGreenBright.black(exeName + ' Copied!'),
           );
-        }
-        if (!exists) {
+
+          //Delete the old streamdeck plugin file if it exists
+          fs.remove(
+            outputPath + '\\' + pluginName + '.streamDeckPlugin',
+            (err) => {
+              if (err) {
+                console.log(chalk.bgRed(err));
+              }
+            },
+          );
           console.log(
-            chalk.bgYellowBright.black(
-              outputPath + ' has been created',
+            chalk.bgRedBright.black(
+              'Old Plugin deleted from: ',
+              outputPath,
             ),
           );
-        }
 
-        //Copy the created exe to the .sdPlugin folder
-        console.log(
-          chalk.bgBlueBright.black(
-            'Copying ' + exeName + ' to ' + pluginPath,
-          ),
-        );
-        fs.copy(
-          exeName,
-          pluginPath + '\\' + exeName,
-          { overwrite: true },
-          (err) => {
-            if (err) {
-              console.log(chalk.bgRed(err));
-            }
-            console.log(
-              chalk.bgGreenBright.black(exeName + ' Copied!'),
-            );
+          //Download and extract the latest distribution tool for windows from elgatos site directly
+          console.log(
+            chalk.bgBlueBright.black('Getting Distribution Tool'),
+          );
+          http
+            .get(
+              'https://developer.elgato.com/documentation/stream-deck/distributiontool/DistributionToolWindows.zip',
+              (response) => {
+                response.on('data', function (data) {
+                  buffers.push(data);
+                  hashNew.update(data, 'utf8');
+                });
 
-            //Delete the old streamdeck plugin file if it exists
-            fs.remove(
-              outputPath + '\\' + pluginName + '.streamDeckPlugin',
-              (err) => {
-                if (err) {
-                  console.log(chalk.bgRed(err));
-                }
-              },
-            );
-            console.log(
-              chalk.bgRedBright.black(
-                'Old Plugin deleted from: ',
-                outputPath,
-              ),
-            );
+                response.on('end', function () {
+                  CompBuffer = Buffer.concat(buffers);
+                  var newHash, existHash;
+                  newHash = hashNew.digest('hex');
 
-            //Download and extract the latest distribution tool for windows from elgatos site directly
-            console.log(
-              chalk.bgBlueBright.black('Getting Distribution Tool'),
-            );
-            http
-              .get(
-                'https://developer.elgato.com/documentation/stream-deck/distributiontool/DistributionToolWindows.zip',
-                (response) => {
-                  response.on('data', function (data) {
-                    buffers.push(data);
-                    hashNew.update(data, 'utf8');
+                  file = fs.createReadStream(
+                    'DistributionToolWindows.zip',
+                  );
+                  file.on('error', (err) => {
+                    if (err.code == 'ENOENT') {
+                      console.log(
+                        chalk.bgRed(
+                          'Tool does not yet exist now downloading!',
+                        ),
+                      );
+                      writeZip(CompBuffer);
+                    }
                   });
-
-                  response.on('end', function () {
-                    CompBuffer = Buffer.concat(buffers);
-                    var newHash, existHash;
-                    newHash = hashNew.digest('hex');
-
-                    file = fs.createReadStream(
-                      'DistributionToolWindows.zip',
-                    );
-                    file.on('error', (err) => {
-                      if (err.code == 'ENOENT') {
-                        console.log(
-                          chalk.bgRed(
-                            'Tool does not yet exist now downloading!',
-                          ),
-                        );
-                        writeZip(CompBuffer);
-                      }
-                    });
-                    file.on('data', (data) => {
-                      hashExist.update(data, 'utf8');
-                    });
-                    file.on('end', () => {
-                      existHash = hashExist.digest('hex');
-                      if (newHash == existHash) {
-                        console.log(
-                          chalk.bgGreenBright.black(
-                            'Application already up to date!',
-                          ),
-                        );
-                        console.log(
-                          chalk.bgBlueBright.black(
-                            'Unzipping DistributionTool file',
-                          ),
-                        );
-
-                        //Extract the Distribution exe
-                        extract('./DistributionToolWindows.zip', {
-                          dir: process.cwd(),
-                        }).then(() => {
-                          console.log(
-                            chalk.bgGreenBright.black(
-                              'File Extracted!',
-                            ),
-                          );
-
+                  file.on('data', (data) => {
+                    hashExist.update(data, 'utf8');
+                  });
+                  file.on('end', () => {
+                    existHash = hashExist.digest('hex');
+                    if (newHash == existHash) {
+                      console.log(
+                        chalk.bgGreenBright.black(
+                          'DistributionTool already up to date!',
+                        ),
+                      );
+                      fs.pathExists(
+                        './DistributionTool.exe',
+                        (err, exists) => {
+                          if (!exists) {
+                            console.log(
+                              chalk.bgBlueBright.black(
+                                'Unzipping DistributionTool file',
+                              ),
+                            );
+                            //Extract the Distribution exe
+                            extract('./DistributionToolWindows.zip', {
+                              dir: process.cwd(),
+                            }).then(() => {
+                              console.log(
+                                chalk.bgGreenBright.black(
+                                  'File Extracted!',
+                                ),
+                              );
+                            });
+                          }
                           //Build the plugin
                           console.log(
                             chalk.bgBlueBright.black(
@@ -188,54 +174,54 @@ exec([pluginJS, '--target', 'win', '--output', exeName])
                             ),
                           );
                           buildPlugin();
-                        });
-                      } else {
-                        writeZip(CompBuffer);
-                      }
-                    });
+                        },
+                      );
+                    } else {
+                      writeZip(CompBuffer);
+                    }
                   });
-                },
-              )
-              .on('error', (err) => {
-                if (
-                  err.code == 'ENOTFOUND' &&
-                  err.syscall == 'getaddrinfo'
-                ) {
-                  console.log(
-                    chalk.bgRed(
-                      'Error: Could not connect to internet to check for updated DistributionTool',
-                    ),
-                  );
-                  fs.pathExists(
-                    path.join(devPath, 'DistributionTool.exe'),
-                    (err, exists) => {
-                      if (err) {
-                        console.log(chalk.bgRed(err));
-                      }
-                      if (exists) {
-                        console.log(
-                          chalk.bgBlueBright.black(
-                            'Building New Plugin Using Existing DistributionTool!',
-                          ),
-                        );
-                        buildPlugin();
-                      }
-                      if (!exists) {
-                        console.log(
-                          chalk.bgRed(
-                            'No existing DistributionTool Found! Cannot proceed with build...Now exiting',
-                          ),
-                        );
-                      }
-                    },
-                  );
-                } else {
-                  console.log(chalk.bgRed(err.syscall));
-                }
-              });
-          },
-        );
-      });
+                });
+              },
+            )
+            .on('error', (err) => {
+              if (
+                err.code == 'ENOTFOUND' &&
+                err.syscall == 'getaddrinfo'
+              ) {
+                console.log(
+                  chalk.bgRed(
+                    'Error: Could not connect to internet to check for updated DistributionTool',
+                  ),
+                );
+                fs.pathExists(
+                  path.join(devPath, 'DistributionTool.exe'),
+                  (err, exists) => {
+                    if (err) {
+                      console.log(chalk.bgRed(err));
+                    }
+                    if (exists) {
+                      console.log(
+                        chalk.bgBlueBright.black(
+                          'Building New Plugin Using Existing DistributionTool!',
+                        ),
+                      );
+                      buildPlugin();
+                    }
+                    if (!exists) {
+                      console.log(
+                        chalk.bgRed(
+                          'No existing DistributionTool Found! Cannot proceed with build...Now exiting',
+                        ),
+                      );
+                    }
+                  },
+                );
+              } else {
+                console.log(chalk.bgRed(err.syscall));
+              }
+            });
+        },
+      );
     });
   })
   .catch((err) => {

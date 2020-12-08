@@ -1,10 +1,9 @@
 const fs = require('fs');
 const moment = require('moment');
-const findFilesInPkg = require('./findFilesInPkg');
 
-//Convert "-" to "--" from process argv to make compatable with minimist
+// Convert "-" to "--" from process argv to make compatable with minimist
 const cliArgs = () => {
-  for (var c = 0; c < process.argv.length; c++) {
+  for (let c = 0; c < process.argv.length; c++) {
     if (process.argv[c].startsWith('-')) {
       process.argv[c] = '-' + process.argv[c];
     }
@@ -12,7 +11,7 @@ const cliArgs = () => {
   return process.argv;
 };
 
-//Write data to log. Created this so its easier to see just the output from this plugin instead of all info that is logged to the SD Logs.
+// Write data to log. Created this so its easier to see just the output from this plugin instead of all info that is logged to the SD Logs.
 function writeToLog(data) {
   fs.appendFile(
     'log.txt',
@@ -29,5 +28,5 @@ function writeToLog(data) {
 module.exports = {
   cliArgs: cliArgs,
   writeToLog: writeToLog,
-  findFilesInPkg: findFilesInPkg,
+  inPkg: require('./findFilesInPkg'),
 };
