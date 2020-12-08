@@ -2,7 +2,7 @@ const minimist = require('minimist');
 const WebSocket = require('ws');
 // functions store to help the file look cleaner and to easily add new functions if needed
 const functions = require('./functions');
-// If you have a module that uses exe files Ex.) nircmd use this to extract it to the cwd, see README.md for more info on how to call/modify the call for these files so they run properly.
+// If you have a module that uses exe files Ex.) nircmd use this to extract it to the cwd, see README.md for more info on how to call/modify the call for these files so they can run properly.
 /*
 const { inPkg } = require('./functions');
 inPkg(__dirname + '\\node_modules', undefined, /\.exe$/);

@@ -29,8 +29,10 @@ Allows you to run NodeJS with the elgato streamdeck by building into a compiled 
 
 There may be things that could have been done better but im still learning as i go.
 
-# Known Issues
+# How to use modules that use .exe files called with childprocess
 
-.exe files that are packaged into the pkg exe must be extracted and placed outside the pkg exe, and must have their spawn function called using `process.cwd()` instead of `__dirname` as `__dirname` will use the snapshot path and will not work properly. You can use `.findFilesInPkg()` with the filter set as a regex expression in this case `/\.exe$/` to find any and all files that match to be extracted and it will do it automatically.
+.exe files must be extracted and placed outside the pkg exe, and must have their spawn function called using `process.cwd()` instead of `__dirname`. `__dirname` will use the snapshot path and will not work properly. You can use `inPkg()` found in `functions.js` with the filter set as a regex expression in this case `/\.exe$/` to find any and all files that match to be extracted and it will do it automatically. There is an example and working code version for this exact issue commented out in `main.js`.
 
-Any .dll files that are required with .node files must be placed outside the pkg exe and distributed with the .exe
+# Native Modules
+
+Some native modules may require .dll files to run properly i suggest downloading and running [Dependencies] (https://github.com/lucasg/Dependencies) and checking if they are any .dll files that are required and are **Not** located in `C:\WINDOWS`. You can use the same method as exe files to extract those but i find it better to just go to the path and get the files manually as some modules may have multiples of the same dll and the above function is recurrsive.
