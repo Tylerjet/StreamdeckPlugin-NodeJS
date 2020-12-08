@@ -31,7 +31,7 @@ There may be things that could have been done better but im still learning as i 
 
 # How to use modules that use .exe files called with childprocess
 
-.exe files must be extracted and placed outside the pkg exe, and must have their spawn function called using `process.cwd()` instead of `__dirname`. `__dirname` will use the snapshot path and will not work properly. You can use `inPkg()` found in `functions.js` with the filter set as a regex expression in this case `/\.exe$/` to find any and all files that match to be extracted and it will do it automatically. There is an example and working code version for this exact issue commented out in `main.js`.
+.exe files must be extracted and placed outside the pkg exe, and must have their spawn function called using `process.cwd()` instead of `__dirname`. `__dirname` will use the snapshot path and will not work properly. You can use `inPkg()` found in `functions.js` with the filter set as a regex expression in this case `/\.exe$/` to find any and all files that match and extract them to the current working directory. There is an example and working code version for this exact issue commented out in `main.js`.
 
 # Native Modules
 
