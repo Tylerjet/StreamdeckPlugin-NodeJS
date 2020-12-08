@@ -48,7 +48,9 @@ function copyFiles(fileArr, cPath) {
       .createReadStream(fileArr[Item])
       .pipe(fs.createWriteStream(copyPath), { end: true });
     copy.on('close', () => {
-      console.log('file', fileArr[Item], 'Copied');
+      if (isDev) {
+        console.log('file', fileArr[Item], 'Copied');
+      }
     });
   }
 }

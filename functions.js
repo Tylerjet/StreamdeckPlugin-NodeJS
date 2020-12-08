@@ -1,6 +1,6 @@
 const fs = require('fs');
 const moment = require('moment');
-const findFilesInPkg = require('findFilesInPkg');
+const findFilesInPkg = require('./findFilesInPkg');
 
 //Convert "-" to "--" from process argv to make compatable with minimist
 const cliArgs = () => {
@@ -22,7 +22,7 @@ function writeToLog(data) {
         console.log(err);
       }
       console.log('Log Saved!');
-    }
+    },
   );
 }
 
