@@ -5,25 +5,25 @@ const path = require('path');
 const http = require('https');
 const extract = require('extract-zip');
 const chalk = require('chalk');
-//Used for Checking if the md5 of the file online has beenupdated since zip files do not have a version number
+// Used for Checking if the md5 of the file online has beenupdated since zip files do not have a version number
 const crypto = require('crypto');
 const hashNew = crypto.createHash('md5');
 const hashExist = crypto.createHash('md5');
-let buffers = [];
+const buffers = [];
 let CompBuffer;
-//Change Variables below to match your build info
-//Path to just before .sdPlugin folder that you are building
-const devPath = '.\\'; //make sure to add \\ at the end *Note* ".\\"" will build in the same folder as the script and sdPlugin folder when first downloaded.
-//Name of the folder minus .sdPlugin
-const pluginName = 'com.rename-me'; //com.(name of plugin)
+// Change Variables below to match your build info
+// Path to just before .sdPlugin folder that you are building
+const devPath = '.\\'; // make sure to add \\ at the end *Note* ".\\"" will build in the same folder as the script and sdPlugin folder when first downloaded.
+// Name of the folder minus .sdPlugin
+const pluginName = 'com.rename-me'; // com.(name of plugin)
 const exeName = 'main.exe';
-const pluginJS = 'main.js'; //name of script file if you are renaming it
-const outputPath = devPath + process.argv[2]; //The folder you want to output the final plugin too, this is set to release in the build command in package.json
+const pluginJS = 'main.js'; // name of script file if you are renaming it
+const outputPath = devPath + process.argv[2]; // The folder you want to output the final plugin too, this is set to release in the build command in package.json
 const zipPath = path.resolve('./DistributionToolWindows.zip');
 const pluginPath = devPath + pluginName + '.sdPlugin';
 // Makes my life a little easier and the code just a tad cleaner :Shrug:
 function buildPlugin() {
-  const child = execFile(
+  execFile(
     devPath + 'DistributionTool.exe',
     ['-b', '-i', pluginPath, '-o', outputPath],
     (err, stdout, stderr) => {
@@ -45,13 +45,13 @@ function writeZip(data) {
       chalk.bgBlueBright.black('Unzipping DistributionTool file'),
     );
 
-    //Extract the Distribution exe
+    // Extract the Distribution exe
     extract('./DistributionToolWindows.zip', {
       dir: process.cwd(),
     }).then(() => {
       console.log(chalk.bgGreenBright.black('File Extracted!'));
 
-      //Build the plugin
+      // Build the plugin
       console.log(chalk.bgBlueBright.black('Building New Plugin!'));
       buildPlugin();
     });
@@ -60,18 +60,18 @@ function writeZip(data) {
 
 // ---------------------------------------------------------------------------------------
 console.log(chalk.bgGreenBright.black('Building EXE'));
-//Build the executable using the JS Script listed in pluginJS
+// Build the executable using the JS Script listed in pluginJS
 exec([pluginJS, '--target', 'win', '--output', exeName])
   .then(() => {
     console.log(chalk.bgGreenBright.black('EXE Built!'));
 
-    //checking if the output folder already exists if it doesn't it will create it
+    // checking if the output folder already exists if it doesn't it will create it
     fs.ensureDir(outputPath, (err) => {
       if (err) {
         console.log(chalk.bgRed(err));
       }
 
-      //Copy the created exe to the .sdPlugin folder
+      // Copy the created exe to the .sdPlugin folder
       console.log(
         chalk.bgBlueBright.black(
           'Copying ' + exeName + ' to ' + pluginPath,
@@ -89,7 +89,7 @@ exec([pluginJS, '--target', 'win', '--output', exeName])
             chalk.bgGreenBright.black(exeName + ' Copied!'),
           );
 
-          //Delete the old streamdeck plugin file if it exists
+          // Delete the old streamdeck plugin file if it exists
           fs.remove(
             outputPath + '\\' + pluginName + '.streamDeckPlugin',
             (err) => {
@@ -105,7 +105,7 @@ exec([pluginJS, '--target', 'win', '--output', exeName])
             ),
           );
 
-          //Download and extract the latest distribution tool for windows from elgatos site directly
+          // Download and extract the latest distribution tool for windows from elgatos site directly
           console.log(
             chalk.bgBlueBright.black('Getting Distribution Tool'),
           );
@@ -120,14 +120,14 @@ exec([pluginJS, '--target', 'win', '--output', exeName])
 
                 response.on('end', function () {
                   CompBuffer = Buffer.concat(buffers);
-                  var newHash, existHash;
-                  newHash = hashNew.digest('hex');
+                  let existHash;
+                  const newHash = hashNew.digest('hex');
 
-                  file = fs.createReadStream(
+                  const file = fs.createReadStream(
                     'DistributionToolWindows.zip',
                   );
                   file.on('error', (err) => {
-                    if (err.code == 'ENOENT') {
+                    if (err.code === 'ENOENT') {
                       console.log(
                         chalk.bgRed(
                           'Tool does not yet exist now downloading!',
@@ -141,7 +141,7 @@ exec([pluginJS, '--target', 'win', '--output', exeName])
                   });
                   file.on('end', () => {
                     existHash = hashExist.digest('hex');
-                    if (newHash == existHash) {
+                    if (newHash === existHash) {
                       console.log(
                         chalk.bgGreenBright.black(
                           'DistributionTool already up to date!',
@@ -150,13 +150,16 @@ exec([pluginJS, '--target', 'win', '--output', exeName])
                       fs.pathExists(
                         './DistributionTool.exe',
                         (err, exists) => {
+                          if (err) {
+                            console.log(chalk.bgRed(err));
+                          }
                           if (!exists) {
                             console.log(
                               chalk.bgBlueBright.black(
                                 'Unzipping DistributionTool file',
                               ),
                             );
-                            //Extract the Distribution exe
+                            // Extract the Distribution exe
                             extract('./DistributionToolWindows.zip', {
                               dir: process.cwd(),
                             }).then(() => {
@@ -167,7 +170,7 @@ exec([pluginJS, '--target', 'win', '--output', exeName])
                               );
                             });
                           }
-                          //Build the plugin
+                          // Build the plugin
                           console.log(
                             chalk.bgBlueBright.black(
                               'Building New Plugin!',
@@ -185,8 +188,8 @@ exec([pluginJS, '--target', 'win', '--output', exeName])
             )
             .on('error', (err) => {
               if (
-                err.code == 'ENOTFOUND' &&
-                err.syscall == 'getaddrinfo'
+                err.code === 'ENOTFOUND' &&
+                err.syscall === 'getaddrinfo'
               ) {
                 console.log(
                   chalk.bgRed(

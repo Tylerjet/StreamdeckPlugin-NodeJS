@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-let results = [];
+const results = [];
 const isDev = false;
 
 /**
@@ -35,7 +35,7 @@ function copyFiles(fileArr, cPath) {
   if (isDev) {
     console.log('Copy File Arr:', fileArr);
   }
-  for (let Item in fileArr) {
+  for (const Item in fileArr) {
     if (isDev) {
       console.log(fileArr[Item]);
     }
