@@ -1,8 +1,12 @@
-var websocket = null,
-  uuid = null,
-  actionInfo = {},
-  inInfo = {};
-function connectSocket(
+/* eslint-disable no-unused-vars */
+let websocket = null;
+let uuid = null;
+let actionInfo = {};
+// eslint-disable-next-line no-var
+var inInfo = {};
+let settings = {};
+
+function connectElgatoStreamDeckSocket(
   inPort,
   inUUID,
   inRegisterEvent,
@@ -10,49 +14,54 @@ function connectSocket(
   inActionInfo,
 ) {
   uuid = inUUID;
-  actionInfo = JSON.parse(inActionInfo);
+
+  actionInfo = JSON.parse(inActionInfo); // cache the info
   inInfo = JSON.parse(inInfo);
-  websocket = new WebSocket('ws://localhost:' + inPort);
+  // eslint-disable-next-line no-undef
+  websocket = new WebSocket('ws://127.0.0.1:' + inPort);
+
+  settings = getPropFromString(actionInfo, 'payload.settings', false);
+  console.log(settings, actionInfo);
 
   websocket.onopen = function () {
-    var json = {
+    const json = {
       event: inRegisterEvent,
       uuid: inUUID,
     };
 
     websocket.send(JSON.stringify(json));
-    sendValueToPlugin('propertyInspectorConnected', 'PIC');
   };
 
   websocket.onmessage = function (evt) {
-    var inputMessage = document.getElementById('Message');
+    const inputMessage = document.getElementById('Message');
 
-    var jsonObj = JSON.parse(evt.data);
-    var event = jsonObj['event'];
-    var context = jsonObj['context'];
-    var payload = jsonObj['payload'];
-
-    if (payload.Message) {
-      inputMessage.value = payload.Message;
-    }
+    const jsonObj = JSON.parse(evt.data);
+    const event = jsonObj.event;
+    /* 
+    if (getPropFromString(jsonObj, 'payload.Message')) {
+      inputMessage.value = jsonObj.payload.Message;
+    } */
+    console.log(jsonObj);
   };
 
   websocket.onclose = function () {};
 }
 
-/** the beforeunload event is fired, right before the PI will remove all nodes */
-window.addEventListener('beforeunload', function (e) {
-  e.preventDefault();
-
-  sendValueToPlugin('propertyInspectorWillDisappear', 'PID');
-  // Don't set a returnValue to the event, otherwise Chromium with throw an error.  // e.returnValue = '';
-});
+const getPropFromString = (jsn, str, sep = '.') => {
+  const arr = str.split(sep);
+  return arr.reduce(
+    (obj, key) =>
+      // eslint-disable-next-line no-prototype-builtins
+      obj && obj.hasOwnProperty(key) ? obj[key] : undefined,
+    jsn,
+  );
+};
 
 // our method to pass values to the plugin
 function sendValueToPlugin(value, param) {
   if (websocket) {
     const json = {
-      action: actionInfo['action'],
+      action: actionInfo.action,
       event: 'sendToPlugin',
       context: uuid,
       payload: {
