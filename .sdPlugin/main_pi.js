@@ -1,10 +1,8 @@
-let wesocket = null;
-let uuid = null;
-let actionInfo = {};
-let settings = {};
-const onchangeevt = 'onchange';
-
-function connectElgatoStreamDeckSocket(
+var websocket = null,
+  uuid = null,
+  actionInfo = {},
+  inInfo = {};
+function connectSocket(
   inPort,
   inUUID,
   inRegisterEvent,
@@ -14,31 +12,45 @@ function connectElgatoStreamDeckSocket(
   uuid = inUUID;
   actionInfo = JSON.parse(inActionInfo);
   inInfo = JSON.parse(inInfo);
-  ebsocket = new WebSocket('ws://127.0.0.1:' + inPort);
-
-  addDynamicStyles(inInfo.colors, 'connectElgatoStreamDeckSocket');
-
-  settings = getPropFromString(actionInfo, 'payload.settings', false);
-  console.log(settings, actionInfo);
+  websocket = new WebSocket('ws://localhost:' + inPort);
 
   websocket.onopen = function () {
     var json = {
       event: inRegisterEvent,
       uuid: inUUID,
     };
-    // register property inspector to Stream Deck
+
     websocket.send(JSON.stringify(json));
+    sendValueToPlugin('propertyInspectorConnected', 'PIC');
   };
 
   websocket.onmessage = function (evt) {
-    // Received message from Stream Deck
+    var inputMessage = document.getElementById('Message');
+
     var jsonObj = JSON.parse(evt.data);
-    var event = jsonObj.event;
+    var event = jsonObj['event'];
+    var context = jsonObj['context'];
+    var payload = jsonObj['payload'];
+
+    if (payload.Message) {
+      inputMessage.value = payload.Message;
+    }
   };
+
+  websocket.onclose = function () {};
 }
 
+/** the beforeunload event is fired, right before the PI will remove all nodes */
+window.addEventListener('beforeunload', function (e) {
+  e.preventDefault();
+
+  sendValueToPlugin('propertyInspectorWillDisappear', 'PID');
+  // Don't set a returnValue to the event, otherwise Chromium with throw an error.  // e.returnValue = '';
+});
+
+// our method to pass values to the plugin
 function sendValueToPlugin(value, param) {
-  if (websocket && websocket.readyState === 1) {
+  if (websocket) {
     const json = {
       action: actionInfo['action'],
       event: 'sendToPlugin',
@@ -50,12 +62,3 @@ function sendValueToPlugin(value, param) {
     websocket.send(JSON.stringify(json));
   }
 }
-
-const getPropFromString = (jsn, str, sep = '.') => {
-  const arr = str.split(sep);
-  return arr.reduce(
-    (obj, key) =>
-      obj && obj.hasOwnProperty(key) ? obj[key] : undefined,
-    jsn,
-  );
-};
