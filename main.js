@@ -27,18 +27,15 @@ const Info = args.Info;
 
 /* Insert any custom node module requires here */
 
+/* Insert and custom functions here */
+
 /*
 Called by streamdeck when plugin is added to initiate the connection, same as building a js only version from here on out for the most part, besides the fact that
 you can use almost any node module obviously
 */
 connectElgatoStreamDeckSocket(Port, PluginUUID, RegisterEvent, Info);
 
-function connectElgatoStreamDeckSocket(
-  inPort,
-  inPluginUUID,
-  inRegisterEvent,
-  inInfo,
-) {
+function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, inInfo) {
   // Open the web socket
   // Use websocket since i now learned localhost takes 300ms to resolve apparently
   const websocket = new WebSocket('ws://127.0.0.1:' + inPort);
@@ -66,6 +63,7 @@ function connectElgatoStreamDeckSocket(
     // Received message from Stream Deck
     const jsonObj = JSON.parse(evt.data);
     const context = jsonObj.context;
+    let settings = {};
 
     switch (jsonObj.event) {
       case 'keyDown': {
@@ -109,6 +107,7 @@ function connectElgatoStreamDeckSocket(
       }
 
       case 'didReceiveSettings': {
+        settings = jsonObj.payload.settings;
         writeToLog(jsonObj.event);
         break;
       }
