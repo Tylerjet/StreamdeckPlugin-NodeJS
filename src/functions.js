@@ -13,20 +13,16 @@ const cliArgs = () => {
 
 // Write data to log. Created this so its easier to see just the output from this plugin instead of all info that is logged to the SD Logs.
 function writeToLog(data) {
-  fs.appendFile(
-    'log.txt',
-    moment().format('M/D/YYYY-h:mm:ss: ') + data + '\n',
-    (err) => {
-      if (err) {
-        console.log(err);
-      }
-      console.log('Log Saved!');
-    },
-  );
+  fs.appendFile('log.txt', moment().format('M/D/YYYY-h:mm:ss: ') + data + '\n', (err) => {
+    if (err) {
+      console.log(err);
+    }
+    console.log('Log Saved!');
+  });
 }
 
 module.exports = {
   cliArgs: cliArgs,
   writeToLog: writeToLog,
-  inPkg: require('./findFilesInPkg'),
+  inPkg: require('findFilesInPkg'),
 };

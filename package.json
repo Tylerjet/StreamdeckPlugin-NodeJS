@@ -21,6 +21,7 @@
   "dependencies": {
     "chalk": "^4.1.0",
     "extract-zip": "^2.0.1",
+    "findfilesinpkg": "github:Tylerjet/findFilesInPkg",
     "fs-extra": "^9.0.1",
     "minimist": "^1.2.5",
     "moment": "^2.27.0",
@@ -35,6 +36,10 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1"
   },
+  "@comment pkg": [
+    "Place Glob pattern, or relative path to native .node modules here",
+    "most files will automatically be included if they are called with require with native modules being the main exception"
+  ],
   "pkg": {
     "assets": []
   }
