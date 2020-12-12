@@ -107,6 +107,7 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
       }
 
       case 'didReceiveSettings': {
+        // eslint-disable-next-line no-unused-vars
         settings = jsonObj.payload.settings;
         writeToLog(jsonObj.event);
         break;
