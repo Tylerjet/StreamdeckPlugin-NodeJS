@@ -3,7 +3,7 @@ const WebSocket = require('ws');
 
 // functions storage to help the file look cleaner and to easily add new functions if needed without making this file longer than nessacary.
 // eslint-disable-next-line no-unused-vars
-const { cliArgs, writeToLog, inPkg } = require('./functions');
+const { cliArgs, writeToLog, stringify, inPkg } = require('./functions');
 
 // If you have a module that uses exe files Ex.) nircmd use this to extract it to the cwd, see README.md for more info on how to call/modify the call for these files so they can run properly.
 
@@ -16,9 +16,9 @@ cliArgs();
 const args = minimist(process.argv.slice(2));
 
 /*
-Assign args to variables, Obviously
-TODO: Validate Data i guess (i see in many other streamdeck like sdks that they validate theinfo to make sure its in the correct format
-but unless in the future elgato changes that the data should stay the same so im not sure if there is a real need for it :shrug:)
+Assign args to the proper variables, Obviously
+TODO: Validate Data i guess (i see in many other streamdeck like sdks that they validate the info to make sure its in the correct format
+but unless in the future elgato changes that the data should stay the same since the data comes cmd paramaters so im not sure if there is a real need for it :shrug:)
 */
 const Port = args.port;
 const PluginUUID = args.pluginUUID;
@@ -27,17 +27,18 @@ const Info = args.Info;
 
 /* Insert any custom node module requires here */
 
-/* Insert and custom functions here */
+/* Insert any custom functions here */
 
 /*
-Called by streamdeck when plugin is added to initiate the connection, same as building a js only version from here on out for the most part, besides the fact that
-you can use almost any node module obviously
+Usally Called by SD when plugin is added to initiate the connection, 
+but because this will be in exe form we must call the function ourselves since SD cannot,
+same as building a js plugin from here on out for the most part, besides the fact that you can use almost any node module obviously
 */
 connectElgatoStreamDeckSocket(Port, PluginUUID, RegisterEvent, Info);
 
 function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, inInfo) {
   // Open the web socket
-  // Use websocket since i now learned localhost takes 300ms to resolve apparently
+  // Use 127.0.0.1 since i now learned localhost takes 300ms to resolve apparently
   const websocket = new WebSocket('ws://127.0.0.1:' + inPort);
 
   websocket.onopen = () => {
@@ -47,7 +48,7 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
       uuid: inPluginUUID,
     };
 
-    websocket.send(JSON.stringify(json));
+    websocket.send(stringify(json));
     writeToLog('Websocket Connected');
   };
 
@@ -58,12 +59,11 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
   websocket.onerror = (evt) => {
     writeToLog('Websocket Error: ', evt, evt.data);
   };
-  // Remove and keep what you need here just added most of what is emitted from the streamdeck at any given time from either and action or from clicking on the button in the software
   websocket.onmessage = (evt) => {
     // Received message from Stream Deck
     const jsonObj = JSON.parse(evt.data);
     const context = jsonObj.context;
-    let settings = {};
+    let settings = jsonObj.payload.settings !== undefined ? jsonObj.payload.settings : {}; // If there are settings then use them, if not define that an obj is expected
 
     switch (jsonObj.event) {
       case 'keyDown': {
@@ -72,64 +72,69 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
           context: context,
         };
 
-        websocket.send(JSON.stringify(showOk));
+        websocket.send(stringify(showOk));
+        writeToLog(stringify(jsonObj));
         break;
       }
-
+      /*
+      Remove and keep what you need here just added most of what is emitted from the streamdeck at any given time from either an action or from clicking on the button in the software
+      recieved events documentation can be found at: https://developer.elgato.com/documentation/stream-deck/sdk/events-received/
+      and events you can send at: https://developer.elgato.com/documentation/stream-deck/sdk/events-sent/
+      */
       case 'keyUp': {
-        writeToLog(jsonObj.event);
+        writeToLog(stringify(jsonObj));
         break;
       }
 
       case 'willAppear': {
-        writeToLog(jsonObj.event);
+        writeToLog(stringify(jsonObj));
         break;
       }
 
       case 'willDisappear': {
-        writeToLog(jsonObj.event);
+        writeToLog(stringify(jsonObj));
         break;
       }
 
       case 'titleParametersDidChange': {
-        writeToLog(jsonObj.event);
+        writeToLog(stringify(jsonObj));
         break;
       }
 
       case 'deviceDidConnect': {
-        writeToLog(jsonObj.event);
+        writeToLog(stringify(jsonObj));
         break;
       }
 
       case 'deviceDidDisconnect': {
-        writeToLog(jsonObj.event);
+        writeToLog(stringify(jsonObj));
         break;
       }
 
       case 'didReceiveSettings': {
         // eslint-disable-next-line no-unused-vars
         settings = jsonObj.payload.settings;
-        writeToLog(jsonObj.event);
+        writeToLog(stringify(jsonObj));
         break;
       }
 
       case 'didReceiveGlobalSettings': {
-        writeToLog(jsonObj.event);
+        writeToLog(stringify(jsonObj));
         break;
       }
 
       case 'propertyInspectorDidAppear': {
-        writeToLog(jsonObj.event);
+        writeToLog(stringify(jsonObj));
         break;
       }
 
       case 'propertyInspectorDidDisappear': {
-        writeToLog(jsonObj.event);
+        writeToLog(stringify(jsonObj));
         break;
       }
 
       case 'sendToPlugin': {
-        writeToLog(jsonObj.event);
+        writeToLog(stringify(jsonObj));
         break;
       }
     }
