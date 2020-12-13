@@ -22,13 +22,13 @@ function writeToLog(data) {
   });
 }
 
-function JStr(data) {
+function stringify(data) {
   JSON.stringify(data);
 }
 
 module.exports = {
   cliArgs: cliArgs,
   writeToLog: writeToLog,
-  JStr: JStr,
+  stringify: stringify,
   inPkg: require('findFilesInPkg'),
 };

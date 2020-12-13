@@ -1,18 +1,14 @@
 const minimist = require('minimist');
 const WebSocket = require('ws');
 
-// functions storage to help the file look cleaner and to easily add new functions if needed without making this file longer than nessacary.
+// functions storage to help the file look just a bit cleaner and to easily add new functions if needed without making this file longer than nessacary.
 // eslint-disable-next-line no-unused-vars
 const { cliArgs, writeToLog, stringify, inPkg } = require('./functions');
 
-// If you have a module that uses exe files Ex.) nircmd use this to extract it to the cwd, see README.md for more info on how to call/modify the call for these files so they can run properly.
-
-// inPkg(__dirname + '\\node_modules', undefined, /\.exe$/);
-
-// Convert "-" to "--" from process argv to make compatable with minimist
+// Convert "-" to "--" from process argv to make them compatable with minimist
 cliArgs();
 
-// create array that you can call by the args name ex.) --port 1234 becomes args.port
+// create array that you can call by the args name ex.) --port becomes args.port
 const args = minimist(process.argv.slice(2));
 
 /*
@@ -24,6 +20,9 @@ const Port = args.port;
 const PluginUUID = args.pluginUUID;
 const RegisterEvent = args.registerEvent;
 const Info = args.Info;
+
+// If you have a module that uses exe files Ex.) nircmd use this to extract it to the cwd, see README.md for more info on how to call/modify the call for these files so they can run properly.
+// inPkg(__dirname + '\\node_modules', undefined, /\.exe$/);
 
 /* Insert any custom node module requires here */
 
@@ -53,11 +52,11 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
   };
 
   websocket.onclose = (evt) => {
-    writeToLog('Websocket Closed Reason: ', evt);
+    writeToLog('Websocket Closed Reason: ', stringify(evt));
   };
 
   websocket.onerror = (evt) => {
-    writeToLog('Websocket Error: ', evt, evt.data);
+    writeToLog('Websocket Error: ', stringify(evt), stringify(evt.data));
   };
   websocket.onmessage = (evt) => {
     // Received message from Stream Deck
