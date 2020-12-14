@@ -24,9 +24,9 @@
     "findfilesinpkg": "github:Tylerjet/findFilesInPkg",
     "fs-extra": "^9.0.1",
     "minimist": "^1.2.5",
-    "moment": "^2.27.0",
+    "moment": "^2.29.1",
     "pkg": "github:kkoomen/pkg",
-    "ws": "^7.3.0"
+    "ws": "^7.4.1"
   },
   "devDependencies": {
     "eslint": "^7.15.0",

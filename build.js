@@ -5,22 +5,24 @@ const path = require('path');
 const http = require('https');
 const extract = require('extract-zip');
 const chalk = require('chalk');
-// Used for Checking if the md5 of the file online has beenupdated since zip files do not have a version number
+const findFilesInPkg = require('findFilesInPkg');
+// eslint-disable-next-line no-unused-vars
+const inPkg = findFilesInPkg;
+/* Just used for Checking if the md5 of the file online has been updated since elgato does not use a version json 
+or any identifiying info besides the zip file they create when packaging the distro tool. */
 const crypto = require('crypto');
 const hashNew = crypto.createHash('md5');
 const hashExist = crypto.createHash('md5');
 const buffers = [];
 let CompBuffer;
 // Change Variables below to match your build info
-// Name of the plugin folder minus .sdPlugin
-const pluginName = 'com.[rename-me]'; // com.(name of plugin)
+const pluginName = 'com.goxlr-defaults'; // com.(name of plugin) *Name of the plugin folder minus .sdPlugin
 const exeName = 'main.exe'; // Name of exe once built // TODO: Use variable to set the name in manifest.json so you only have to set it here then build
 const pluginJS = 'package.json'; // set the script in the bin key of package.json (default is main.js)
-const outputPath = '.\\' + process.argv[2]; // The folder you want to output the final plugin too, this is set to release in the build command in package.json
+const outputPath = path.join(process.cwd(), process.argv[2]); // The folder you want to output the final plugin too, this is set to release in the build command in package.json
 const zipPath = path.resolve('./DistributionToolWindows.zip');
-const pluginPath = '.\\' + pluginName + '.sdPlugin';
+const pluginPath = path.join(process.cwd(), pluginName + '.sdPlugin');
 
-// Makes my life a little easier than having to edit in 4 seperate locations and the code just a tad cleaner :Shrug:
 function buildPlugin() {
   execFile(
     process.cwd() + '\\DistributionTool.exe',
@@ -55,25 +57,37 @@ function writeZip(data) {
   });
 }
 
-// ---------------------------------------------------------------------------------------
-console.log(chalk.bgGreenBright.black('Building EXE'));
-// Build the executable using the JS Script listed in pluginJS
-fs.copy('.sdPlugin', pluginPath)
+/* Build the executable using the JS Script listed in pluginJS */
+/* 
+Using Promise.all so that you can add in as many inPkg's as needed and it will wait till they are resolved to continue building,
+but it also needs at least 1 function that will resolve when inPkg is not used so fs.copy is used as the first instance as it will always resolve true unless it cannot create the directory
+*/
+Promise.all([
+  fs.copy('.sdPlugin', pluginPath),
+  // You can uncomment or delete this line its just an example on how to use inPkg to get required files from node_modules or other places before the exe is packaged and then built
+  // inPkg(path.join(__dirname, *(path you want to search will start from the folder this script is ran in)*), pluginPath, *(regex expression)*),
+])
   .then(() => {
-    fs.copy('reqExtFiles', pluginPath).then(() => {
-      exec([pluginJS, '--target', 'win', '--output', exeName])
-        .then(() => {
-          console.log(chalk.bgGreenBright.black('EXE Built!'));
+    console.log(chalk.bgGreenBright.black('Building EXE'));
+    exec([pluginJS, '--target', 'win', '--output', exeName])
+      .then(() => {
+        console.log(chalk.bgGreenBright.black('EXE Built!'));
 
-          // checking if the output folder already exists if it doesn't it will create it
-          fs.ensureDir(outputPath, (err) => {
-            if (err) {
-              console.log(chalk.bgRed(err));
-            }
+        // checking if the output folder already exists if it doesn't it will create it
+        fs.ensureDir(outputPath, (err) => {
+          if (err) {
+            console.log(chalk.bgRed(err));
+          }
 
-            // Copy the created exe to the .sdPlugin folder
-            console.log(chalk.bgBlueBright.black('Copying ' + exeName + ' to ' + pluginPath));
-            fs.copy(exeName, pluginPath + '\\' + exeName, { overwrite: true }, (err) => {
+          // Copy the created exe to the .sdPlugin folder
+          console.log(chalk.bgBlueBright.black('Copying ' + exeName + ' to ' + pluginPath));
+          fs.copy(
+            exeName,
+            pluginPath + '\\' + exeName,
+            {
+              overwrite: true,
+            },
+            (err) => {
               if (err) {
                 console.log(chalk.bgRed(err));
               }
@@ -170,22 +184,22 @@ fs.copy('.sdPlugin', pluginPath)
                             'No existing DistributionTool Found! Cannot proceed with build...Now exiting',
                           ),
                         );
+                        setTimeout(() => {
+                          process.exit();
+                        }, 5000);
                       }
                     });
                   } else {
                     console.log(chalk.bgRed(err.syscall));
                   }
                 });
-            });
-          });
-        })
-        .catch((err) => {
-          console.log(err);
+            },
+          );
         });
-    });
-  })
-  .catch((err) => {
-    console.log(err);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   })
   .catch((err) => {
     console.log(err);
