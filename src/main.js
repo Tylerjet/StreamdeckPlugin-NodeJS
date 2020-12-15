@@ -3,7 +3,7 @@ const WebSocket = require('ws');
 
 // functions storage to help the file look just a bit cleaner and to easily add new functions if needed without making this file longer than nessacary.
 // eslint-disable-next-line no-unused-vars
-const { cliArgs, writeToLog, stringify, inPkg } = require('./functions');
+const { cliArgs, writeToLog, inPkg } = require('./functions');
 
 // Convert "-" to "--" from process argv to make them compatable with minimist
 cliArgs();
@@ -47,22 +47,22 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
       uuid: inPluginUUID,
     };
 
-    websocket.send(stringify(json));
+    websocket.send(JSON.stringify(json));
     writeToLog('Websocket Connected');
   };
 
   websocket.onclose = (evt) => {
-    writeToLog('Websocket Closed Reason: ', stringify(evt));
+    writeToLog('Websocket Closed Reason: ', evt);
   };
 
   websocket.onerror = (evt) => {
-    writeToLog('Websocket Error: ', stringify(evt), stringify(evt.data));
+    writeToLog('Websocket Error: ', evt, evt.data);
   };
   websocket.onmessage = (evt) => {
     // Received message from Stream Deck
     const jsonObj = JSON.parse(evt.data);
     const context = jsonObj.context;
-    let settings = jsonObj.payload.settings !== undefined ? jsonObj.payload.settings : {}; // If there are settings then use them, if not define that an obj is expected
+    // let settings = jsonObj.payload.settings !== undefined ? jsonObj.payload.settings : {}; // If there are settings then use them, if not define that an obj is expected
 
     switch (jsonObj.event) {
       case 'keyDown': {
@@ -71,8 +71,8 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
           context: context,
         };
 
-        websocket.send(stringify(showOk));
-        writeToLog(stringify(jsonObj));
+        websocket.send(JSON.stringify(showOk));
+        writeToLog(JSON.stringify(jsonObj));
         break;
       }
       /*
@@ -81,59 +81,59 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
       and events you can send at: https://developer.elgato.com/documentation/stream-deck/sdk/events-sent/
       */
       case 'keyUp': {
-        writeToLog(stringify(jsonObj));
+        writeToLog(JSON.stringify(jsonObj));
         break;
       }
 
       case 'willAppear': {
-        writeToLog(stringify(jsonObj));
+        writeToLog(JSON.stringify(jsonObj));
         break;
       }
 
       case 'willDisappear': {
-        writeToLog(stringify(jsonObj));
+        writeToLog(JSON.stringify(jsonObj));
         break;
       }
 
       case 'titleParametersDidChange': {
-        writeToLog(stringify(jsonObj));
+        writeToLog(JSON.stringify(jsonObj));
         break;
       }
 
       case 'deviceDidConnect': {
-        writeToLog(stringify(jsonObj));
+        writeToLog(JSON.stringify(jsonObj));
         break;
       }
 
       case 'deviceDidDisconnect': {
-        writeToLog(stringify(jsonObj));
+        writeToLog(JSON.stringify(jsonObj));
         break;
       }
 
       case 'didReceiveSettings': {
         // eslint-disable-next-line no-unused-vars
         settings = jsonObj.payload.settings;
-        writeToLog(stringify(jsonObj));
+        writeToLog(JSON.stringify(jsonObj));
         break;
       }
 
       case 'didReceiveGlobalSettings': {
-        writeToLog(stringify(jsonObj));
+        writeToLog(JSON.stringify(jsonObj));
         break;
       }
 
       case 'propertyInspectorDidAppear': {
-        writeToLog(stringify(jsonObj));
+        writeToLog(JSON.stringify(jsonObj));
         break;
       }
 
       case 'propertyInspectorDidDisappear': {
-        writeToLog(stringify(jsonObj));
+        writeToLog(JSON.stringify(jsonObj));
         break;
       }
 
       case 'sendToPlugin': {
-        writeToLog(stringify(jsonObj));
+        writeToLog(JSON.stringify(jsonObj));
         break;
       }
     }
