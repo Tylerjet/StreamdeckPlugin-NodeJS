@@ -16,7 +16,7 @@ const hashExist = crypto.createHash('md5');
 const buffers = [];
 let CompBuffer;
 // Change Variables below to match your build info
-const pluginName = 'com.goxlr-defaults'; // com.(name of plugin) *Name of the plugin folder minus .sdPlugin
+const pluginName = 'com.[rename-me]'; // com.(name of plugin) *Name of the plugin folder minus .sdPlugin
 const exeName = 'main.exe'; // Name of exe once built // TODO: Use variable to set the name in manifest.json so you only have to set it here then build
 const pluginJS = 'package.json'; // set the script in the bin key of package.json (default is main.js)
 const outputPath = path.join(process.cwd(), process.argv[2]); // The folder you want to output the final plugin too, this is set to release in the build command in package.json
