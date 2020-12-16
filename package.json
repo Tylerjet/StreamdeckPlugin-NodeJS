@@ -5,8 +5,8 @@
   "main": "src\\main.js",
   "bin": "src\\main.js",
   "scripts": {
-    "test": "node build.js dist\\test",
-    "build": "node build.js dist\\release"
+    "build-test": "node build.js dist\\test",
+    "build-release": "node build.js dist\\release"
   },
   "repository": {
     "type": "git",
