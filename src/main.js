@@ -62,7 +62,7 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
     // Received message from Stream Deck
     const jsonObj = JSON.parse(evt.data);
     const context = jsonObj.context;
-    // let settings = jsonObj.payload.settings !== undefined ? jsonObj.payload.settings : {}; // If there are settings then use them, if not define that an obj is expected
+    let settings = jsonObj.payload?.settings === undefined ? {} : jsonObj.payload.settings; // If there are settings then use them, if not define that an obj is expected
 
     switch (jsonObj.event) {
       case 'keyDown': {
