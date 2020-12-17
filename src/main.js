@@ -73,7 +73,7 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
               event: 'showOk',
               context: context,
             };
-    
+
             websocket.send(JSON.stringify(showOk));
             break;
           }
