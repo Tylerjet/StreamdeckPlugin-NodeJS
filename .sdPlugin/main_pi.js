@@ -2,8 +2,7 @@
 let websocket = null;
 let uuid = null;
 let actionInfo = {};
-// eslint-disable-next-line no-var
-var inInfo = {};
+const inInfo = {};
 let settings = {};
 
 function connectElgatoStreamDeckSocket(inPort, inUUID, inRegisterEvent, inInfo, inActionInfo) {
@@ -16,10 +15,7 @@ function connectElgatoStreamDeckSocket(inPort, inUUID, inRegisterEvent, inInfo, 
 
   settings = actionInfo.payload.settings;
   console.log(settings, actionInfo);
-  if (settings !== null && Object.prototype.hasOwnProperty.call(settings, 'PropertyHere')) {
-    loadSettings();
-  }
-
+  // loadSettings();
   websocket.onopen = function () {
     const json = {
       event: inRegisterEvent,
@@ -30,24 +26,27 @@ function connectElgatoStreamDeckSocket(inPort, inUUID, inRegisterEvent, inInfo, 
   };
 
   websocket.onmessage = function (evt) {
-    const inputMessage = document.getElementById('Message');
-
+    // Revieved Message from SD
     const jsonObj = JSON.parse(evt.data);
     const event = jsonObj.event;
-    /* 
-    if (getPropFromString(jsonObj, 'payload.Message')) {
-      inputMessage.value = jsonObj.payload.Message;
-    } */
+
     console.log(jsonObj);
   };
 
   websocket.onclose = function () {};
 }
+// const elementId = document.getElementById('');
 
-const loadSettings = () => {
+/* const loadSettings = () => {
   // load settings if some are found
-  // Set any document values etc. when the property inspector is loaded
 };
+
+elementId.onchange = () => {
+  console.log(device.value);
+  setSettings(actionInfo.context, Settings Object here); // on update set new settings
+}; */
+
+// Util Functions
 
 // set settings
 function setSettings(context, settings) {
@@ -59,7 +58,8 @@ function setSettings(context, settings) {
   };
   websocket.send(JSON.stringify(json));
 }
-// our method to pass values to the plugin
+
+// method to pass values to the plugin
 function sendValueToPlugin(value, param) {
   if (websocket) {
     const json = {
