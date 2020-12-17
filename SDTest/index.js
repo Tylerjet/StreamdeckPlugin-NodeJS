@@ -5,6 +5,7 @@ const rlSync = require('readline-sync');
 const { spawn } = require('cross-spawn');
 const path = require('path');
 const Diff = require('diff');
+const assert = require('assert');
 const manifest = require(path.join(config.executable.path, config.executable.manifest));
 const pluginExe = config.executable.winexe; // Setting to windows only since my plugin template is windows only until it works for osx but i have no way of testing so windows it is
 const forked = fork('server.js');
@@ -32,7 +33,6 @@ const actionIndex = selectAction();
 /* Ensure that actions are lowercase as thats how the SD app will send them to your plugin 
 learned this firsthand when my action had a uppercase letter and i wondered why it worked here but not in the actual streamdeck app */
 try {
-  if (manifest.Actions[actionIndex].UUID !== manifest.Actions[actionIndex].UUID.toLowerCase()) {
     const action = manifest.Actions[actionIndex].UUID;
     const diff = Diff.diffChars(action, action.toLowerCase());
     let diffString='';
@@ -41,10 +41,10 @@ try {
       part.value = color(part.value);
       diffString += part.value;
     });
-    throw new Error(`Expected ${action} to equal ${action.toLowerCase()}
+    assert.strictEqual(manifest.Actions[actionIndex].UUID, manifest.Actions[actionIndex].UUID.toLowerCase(), new Error(`Expected ${action} to equal ${action.toLowerCase()}
 Please correct this in manifest.json and your plugin script (default: main.js)
-${diffString}`);
-  }
+${diffString}`));
+
 } catch (error) {
   console.log(Chalk.red(error));
   forked.disconnect();
