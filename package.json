@@ -31,6 +31,8 @@
     "ws": "^7.4.1"
   },
   "devDependencies": {
+    "colors": "^1.4.0",
+    "diff": "^5.0.0",
     "eslint": "^7.15.0",
     "eslint-config-prettier": "^7.0.0",
     "eslint-config-standard": "^16.0.2",

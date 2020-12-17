@@ -4,17 +4,11 @@ const { fork } = require('child_process');
 const rlSync = require('readline-sync');
 const { spawn } = require('cross-spawn');
 const path = require('path');
+const Diff = require('diff');
 const manifest = require(path.join(config.executable.path, config.executable.manifest));
 const pluginExe = config.executable.winexe; // Setting to windows only since my plugin template is windows only until it works for osx but i have no way of testing so windows it is
 const forked = fork('server.js');
 console.log(Chalk.green('<status>Web Socket Server Started....'));
-
-console.log([
-    'Green Text denotes hardware action',
-    'Green Highlight denotes hardware messages sent',
-    'Cyan highlight denotes messages received from plugin'
-].join('\n'));
-
 // Registration Stuff
 const info = {
     'application': {
@@ -40,15 +34,30 @@ learned this firsthand when my action had a uppercase letter and i wondered why 
 try {
   if (manifest.Actions[actionIndex].UUID !== manifest.Actions[actionIndex].UUID.toLowerCase()) {
     const action = manifest.Actions[actionIndex].UUID;
-    throw Error('Expected '+ action + ' to equal '+action.toLowerCase());
+    const diff = Diff.diffChars(action, action.toLowerCase());
+    let diffString='';
+    diff.forEach((part) => {
+      const color = part.added ? Chalk.green : part.removed ? Chalk.red: Chalk.grey;
+      part.value = color(part.value);
+      diffString += part.value;
+    });
+    throw new Error(`Expected ${action} to equal ${action.toLowerCase()}
+Please correct this in manifest.json and your plugin script (default: main.js)
+${diffString}`);
   }
 } catch (error) {
-  console.log(Chalk.bgRed.white.underline(error));
+  console.log(Chalk.red(error));
   forked.disconnect();
   forked.removeAllListeners();
   forked.kill();
   process.exit();
 }
+
+console.log([
+    'Green Text denotes hardware action',
+    'Green Highlight denotes hardware messages sent',
+    'Cyan highlight denotes messages received from plugin'
+].join('\n'));
 
 forked.send({event:'registerActionIndex', arguments: actionIndex});
 const registrationParams = [
