@@ -5,6 +5,8 @@
   "main": "src\\main.js",
   "bin": "src\\main.js",
   "scripts": {
+    "test": "pkg package.json --target win --output ./.sdPlugin/main.exe && cd ./SDTest && node ./index.js",
+    "test-nobuild": "cd ./SDTest && node ./index.js",
     "build-test": "node build.js dist\\test",
     "build-release": "node build.js dist\\release"
   },

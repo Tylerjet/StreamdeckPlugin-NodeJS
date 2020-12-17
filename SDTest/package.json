@@ -1,0 +1,29 @@
+{
+  "name": "streamdeckemulator",
+  "version": "1.0.0",
+  "description": "Basic Stream Deck hardware emulator",
+  "main": "index.js",
+  "bin": {
+    "sde": "./bin/sde"
+  },
+  "author": "",
+  "license": "MIT",
+  "homepage": "https://github.com/FritzAndFriends/StreamDeckEmulator",
+  "repository": "github:FritzAndFriends/StreamDeckEmulator",
+  "bugs": {
+    "url": "https://github.com/FritzAndFriends/StreamDeckEmulator/issues"
+  },
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "cross-spawn": "^6.0.5",
+    "dotenv": "^6.2.0",
+    "lodash": "^4.17.19",
+    "readline-sync": "^1.4.9",
+    "structured-cli": "^1.0.5",
+    "update-notifier": "^2.5.0",
+    "ws": "^6.1.2"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0"
+  }
+}

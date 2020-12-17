@@ -9,7 +9,7 @@
         }
       ],
       "Tooltip": "This is an example tooltip",
-      "UUID": "com.rename-me.action"
+      "UUID": "com.rename-me.Action"
     }
   ],
   "SDKVersion": 2,

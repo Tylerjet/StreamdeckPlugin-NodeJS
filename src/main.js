@@ -62,16 +62,22 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
     // Received message from Stream Deck
     const jsonObj = JSON.parse(evt.data);
     const context = jsonObj.context;
+    const action = jsonObj.action;
     let settings = jsonObj.payload?.settings === undefined ? {} : jsonObj.payload.settings; // If there are settings then use them, if not define that an obj is expected
 
     switch (jsonObj.event) {
       case 'keyDown': {
-        const showOk = {
-          event: 'showOk',
-          context: context,
-        };
-
-        websocket.send(JSON.stringify(showOk));
+        switch (action) {
+          case 'com.rename-me.Action'.toLowerCase(): {
+            const showOk = {
+              event: 'showOk',
+              context: context,
+            };
+    
+            websocket.send(JSON.stringify(showOk));
+            break;
+          }
+        }
         writeToLog(JSON.stringify(jsonObj));
         break;
       }

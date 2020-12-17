@@ -177,11 +177,3 @@ modules.xml
 
 # End of https://www.gitignore.io/api/webstorm+all,visualstudiocode
 package-lock.json
-
-main.exe
-DistributionToolWindows.zip
-DistributionTool.exe
-release
-test
-.vscode
-log.txt
