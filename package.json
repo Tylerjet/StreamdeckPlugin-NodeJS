@@ -5,6 +5,8 @@
   "main": "src\\main.js",
   "bin": "src\\main.js",
   "scripts": {
+    "lint": "eslint --fix .",
+    "prettier": "prettier --write .",
     "test": "pkg package.json --target win --output ./.sdPlugin/main.exe && cd ./SDTest && node ./index.js",
     "test-nobuild": "cd ./SDTest && node ./index.js",
     "build-test": "node build.js dist\\test",
@@ -38,7 +40,8 @@
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1"
+    "eslint-plugin-promise": "^4.2.1",
+    "prettier": "^2.2.1"
   },
   "@comment pkg": [
     "Place Glob pattern, or relative path to native .node modules here",
