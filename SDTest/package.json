@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "Basic Stream Deck hardware emulator",
   "main": "index.js",
-  "bin": {
-    "sde": "./bin/sde"
-  },
   "author": "",
   "license": "MIT",
   "homepage": "https://github.com/FritzAndFriends/StreamDeckEmulator",
