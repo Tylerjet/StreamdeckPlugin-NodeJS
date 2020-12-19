@@ -155,7 +155,8 @@ function promptUser() {
       forked.send(msg);
       break;
     case 'q':
-      forked.send({ event: 'before-quit' });
+      msg.event = 'before-quit';
+      forked.send(msg);
       return;
     case 'al':
       msg.event = 'applicationDidLaunch';
