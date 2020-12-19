@@ -178,6 +178,10 @@ process.on('message', (msg) => {
     case 'registerActionIndex':
       actionIndex = msg.arguments;
       break;
+    case 'before-quit':
+      _socket.close(1000, 'Emulator called close');
+      process.send({ event: 'quit' });
+      break;
     case 'keyDown':
       json.event = 'keyDown';
       console.log(Chalk.black.bgGreen(JSON.stringify(json)));

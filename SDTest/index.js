@@ -30,6 +30,7 @@ const info = {
 };
 
 const actionIndex = selectAction();
+
 /* Ensure that actions are lowercase as thats how the SD app will send them to your plugin 
 learned this firsthand when my action had a uppercase letter and i wondered why it worked here but not in the actual streamdeck app */
 try {
@@ -55,6 +56,7 @@ ${diffString}`),
   forked.kill();
   process.exit();
 }
+// ------------------------------------------------
 
 console.log(
   [
@@ -87,17 +89,24 @@ console.log(`${pluginExe} has a PID of ${plugin.pid}`);
 
 plugin.on('error', () => {
   // eslint-disable-next-line no-undef
-  console.log(arguments);
+  // console.log(arguments);
 });
 
 plugin.on('exit', () => {
   // eslint-disable-next-line no-undef
-  console.log(arguments);
+  // console.log(arguments);
 });
 
 forked.on('message', (msg) => {
   if (msg.error) {
     console.log(msg.error);
+  }
+  switch (msg.event) {
+    case 'quit':
+      forked.disconnect();
+      forked.removeAllListeners();
+      forked.kill();
+      break;
   }
 });
 promptUser();
@@ -146,10 +155,7 @@ function promptUser() {
       forked.send(msg);
       break;
     case 'q':
-      // Is this too much? Unnecessary? Over-achiever?
-      forked.disconnect();
-      forked.removeAllListeners();
-      forked.kill();
+      forked.send({ event: 'before-quit' });
       return;
     case 'al':
       msg.event = 'applicationDidLaunch';
