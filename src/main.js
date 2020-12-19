@@ -20,7 +20,7 @@ const Port = args.port;
 const PluginUUID = args.pluginUUID;
 const RegisterEvent = args.registerEvent;
 const Info = args.Info;
-
+const SDEMU = args.SDEMU;
 // If you have a module that uses exe files Ex.) nircmd use this to extract it to the cwd, see README.md for more info on how to call/modify the call for these files so they can run properly.
 // inPkg(__dirname + '\\node_modules', undefined, /\.exe$/);
 
@@ -48,15 +48,19 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
     };
 
     websocket.send(JSON.stringify(json));
-    writeToLog('Websocket Connected');
+    SDEMU === true ? console.log('Websocket Connected') : writeToLog('Websocket Connected');
   };
 
   websocket.onclose = (evt) => {
-    writeToLog('Websocket Closed Reason: ', evt);
+    SDEMU === true
+      ? console.log('Websocket Closed Reason: ', evt)
+      : writeToLog('Websocket Closed Reason: ', evt);
   };
 
   websocket.onerror = (evt) => {
-    writeToLog('Websocket Error: ', evt, evt.data);
+    SDEMU === true
+      ? console.log('Websocket Error: ', evt, evt.data)
+      : writeToLog('Websocket Error: ', evt, evt.data);
   };
   websocket.onmessage = (evt) => {
     // Received message from Stream Deck
@@ -78,7 +82,9 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
             break;
           }
         }
-        writeToLog(JSON.stringify(jsonObj));
+        if (SDEMU !== true) {
+          writeToLog(JSON.stringify(jsonObj));
+        }
         break;
       }
       /*
@@ -87,59 +93,81 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
       and events you can send at: https://developer.elgato.com/documentation/stream-deck/sdk/events-sent/
       */
       case 'keyUp': {
-        writeToLog(JSON.stringify(jsonObj));
+        if (SDEMU !== true) {
+          writeToLog(JSON.stringify(jsonObj));
+        }
         break;
       }
 
       case 'willAppear': {
-        writeToLog(JSON.stringify(jsonObj));
+        if (SDEMU !== true) {
+          writeToLog(JSON.stringify(jsonObj));
+        }
         break;
       }
 
       case 'willDisappear': {
-        writeToLog(JSON.stringify(jsonObj));
+        if (SDEMU !== true) {
+          writeToLog(JSON.stringify(jsonObj));
+        }
         break;
       }
 
       case 'titleParametersDidChange': {
-        writeToLog(JSON.stringify(jsonObj));
+        if (SDEMU !== true) {
+          writeToLog(JSON.stringify(jsonObj));
+        }
         break;
       }
 
       case 'deviceDidConnect': {
-        writeToLog(JSON.stringify(jsonObj));
+        if (SDEMU !== true) {
+          writeToLog(JSON.stringify(jsonObj));
+        }
         break;
       }
 
       case 'deviceDidDisconnect': {
-        writeToLog(JSON.stringify(jsonObj));
+        if (SDEMU !== true) {
+          writeToLog(JSON.stringify(jsonObj));
+        }
         break;
       }
 
       case 'didReceiveSettings': {
         // eslint-disable-next-line no-unused-vars
         settings = jsonObj.payload.settings;
-        writeToLog(JSON.stringify(jsonObj));
+        if (SDEMU !== true) {
+          writeToLog(JSON.stringify(jsonObj));
+        }
         break;
       }
 
       case 'didReceiveGlobalSettings': {
-        writeToLog(JSON.stringify(jsonObj));
+        if (SDEMU !== true) {
+          writeToLog(JSON.stringify(jsonObj));
+        }
         break;
       }
 
       case 'propertyInspectorDidAppear': {
-        writeToLog(JSON.stringify(jsonObj));
+        if (SDEMU !== true) {
+          writeToLog(JSON.stringify(jsonObj));
+        }
         break;
       }
 
       case 'propertyInspectorDidDisappear': {
-        writeToLog(JSON.stringify(jsonObj));
+        if (SDEMU !== true) {
+          writeToLog(JSON.stringify(jsonObj));
+        }
         break;
       }
 
       case 'sendToPlugin': {
-        writeToLog(JSON.stringify(jsonObj));
+        if (SDEMU !== true) {
+          writeToLog(JSON.stringify(jsonObj));
+        }
         break;
       }
     }
@@ -148,6 +176,6 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
 
 // Catch Errors
 process.on('uncaughtException', (err) => {
-  writeToLog(err);
+  SDEMU === true ? console.log(err) : writeToLog(err);
   console.log(err);
 });

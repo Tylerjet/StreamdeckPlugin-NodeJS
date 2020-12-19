@@ -75,6 +75,7 @@ const registrationParams = [
   '-info',
   JSON.stringify(info),
   '-break',
+  '-SDEMU',
 ];
 
 console.log(`spawning ${pluginExe} in ${config.executable.path}`);
