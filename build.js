@@ -4,8 +4,6 @@ const pluginName = 'com.[rename-me]'; // com.(name of plugin) *Name of the plugi
 const exeName = 'main.exe'; // Name of exe once built // TODO: Use variable to set the name in manifest.json so you only have to set it here then build
 const pluginJS = 'package.json'; // set the script in the bin key of package.json (default is main.js)
 const outputPath = path.join(process.cwd(), process.argv[2]); // The folder you want to output the final plugin too, this is set to release in the build command in package.json
-const zipPath = path.resolve('./DistributionToolWindows.zip');
-const pluginPath = path.join(process.cwd(), pluginName + '.sdPlugin');
 
 // Do not Mess with things under this line unless you know what you are doing or know how to do things better than i did below
 const { exec } = require('pkg');
@@ -24,6 +22,8 @@ const hashNew = crypto.createHash('md5');
 const hashExist = crypto.createHash('md5');
 const buffers = [];
 let CompBuffer;
+const zipPath = path.resolve('./DistributionToolWindows.zip');
+const pluginPath = path.join(process.cwd(), pluginName + '.sdPlugin');
 
 function buildPlugin() {
   execFile(
