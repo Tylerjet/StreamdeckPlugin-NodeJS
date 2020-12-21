@@ -1,6 +1,7 @@
 const minimist = require('minimist');
 const WebSocket = require('ws');
-
+// Uncomment the below line if you are using inPkg
+// const path = require('path');
 // functions storage to help the file look just a bit cleaner and to easily add new functions if needed without making this file longer than nessacary.
 // eslint-disable-next-line no-unused-vars
 const { cliArgs, writeToLog, inPkg } = require('./functions');
@@ -21,8 +22,9 @@ const PluginUUID = args.pluginUUID;
 const RegisterEvent = args.registerEvent;
 const Info = args.Info;
 const SDEMU = args.SDEMU !== undefined ? args.SDEMU : false; // Checks for this argument sent specifically by the streamdeck emulator for testing
+
 // If you have a module that uses exe files Ex.) nircmd use this to extract it to the cwd, see README.md for more info on how to call/modify the call for these files so they can run properly.
-// inPkg(__dirname + '\\node_modules', undefined, /\.exe$/);
+// inPkg(path.join(__dirname, 'node_modules'), undefined, /\.exe$/);
 
 /* Insert any custom node module requires here */
 
