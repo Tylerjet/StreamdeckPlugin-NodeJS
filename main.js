@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 const minimist = require('minimist');
 const WebSocket = require('ws');
 // Uncomment the below line if you are using inPkg
 // const path = require('path');
+
 // functions storage to help the file look just a bit cleaner and to easily add new functions if needed without making this file longer than nessacary.
-// eslint-disable-next-line no-unused-vars
 const { cliArgs, writeToLog, inPkg } = require('./functions');
 
 // Convert "-" to "--" from process argv to make them compatable with minimist
