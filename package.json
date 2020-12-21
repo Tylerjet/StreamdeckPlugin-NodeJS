@@ -2,8 +2,8 @@
   "name": "streamdeck-nodejs",
   "version": "0.26.1",
   "description": "Allows you to run nodejs with the elgato streamdeck.",
-  "main": "src\\main.js",
-  "bin": "src\\main.js",
+  "main": "main.js",
+  "bin": "main.js",
   "scripts": {
     "lint": "eslint --fix .",
     "prettier": "prettier --write .",
