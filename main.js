@@ -74,17 +74,13 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
 
     switch (jsonObj.event) {
       case 'keyDown': {
-        switch (action) {
-          case 'com.rename-me.Action'.toLowerCase(): {
             const showOk = {
               event: 'showOk',
               context: context,
             };
 
             websocket.send(JSON.stringify(showOk));
-            break;
-          }
-        }
+
         if (SDEMU !== true) {
           writeToLog(JSON.stringify(jsonObj));
         }
