@@ -79,7 +79,6 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
         break;
       }
       case 'keyUp': {
-
         const showOk = {
           event: 'showOk',
           context: context,
@@ -131,7 +130,7 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
         }
         break;
       }
-       
+
       case 'didReceiveSettings': {
         if (SDEMU !== true) {
           writeToLog(JSON.stringify(jsonObj));

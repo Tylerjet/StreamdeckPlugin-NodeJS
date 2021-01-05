@@ -38,4 +38,5 @@ There may be things that could have been done better but im still learning as i 
 Some native modules may require .dll files to run properly i suggest downloading and running [Dependencies](https://github.com/lucasg/Dependencies) and checking if there are any .dll files that are required and are **Not** located in `C:\WINDOWS`. You can choose to use the same method as exe files to extract those but i find it better to just go to the path and get the files manually as some modules may have multiples of the same dll or dlls that are not need and the above function is recurrsive and has no current way to filter out duplicates.
 
 # More To Add Soon
+
 Also need to add some form of docs
