@@ -1,8 +1,6 @@
 /* eslint-disable no-unused-vars */
 const minimist = require('minimist');
 const WebSocket = require('ws');
-// Uncomment the below line if you are using inPkg
-// const path = require('path');
 
 // functions storage to help the file look just a bit cleaner and to easily add new functions if needed without making this file longer than nessacary.
 const { cliArgs, writeToLog, inPkg } = require('./functions');
@@ -25,6 +23,7 @@ const Info = args.Info;
 const SDEMU = args.SDEMU !== undefined ? args.SDEMU : false; // Checks for this argument sent specifically by the streamdeck emulator for testing
 
 // If you have a module that uses exe files Ex.) nircmd use this to extract it to the cwd, see README.md for more info on how to call/modify the call for these files so they can run properly.
+// const path = require('path');
 // inPkg(path.join(__dirname, 'node_modules'), undefined, /\.exe$/);
 
 /* Insert any custom node module requires here */
@@ -70,16 +69,23 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
     const jsonObj = JSON.parse(evt.data);
     const context = jsonObj.context;
     const action = jsonObj.action;
-    let settings = jsonObj.payload?.settings === undefined ? {} : jsonObj.payload.settings; // If there are settings then use them, if not define that an obj is expected
+    const settings = jsonObj.payload?.settings === undefined ? {} : jsonObj.payload.settings; // If there are settings then use them, if not define that an obj is expected
 
     switch (jsonObj.event) {
       case 'keyDown': {
-            const showOk = {
-              event: 'showOk',
-              context: context,
-            };
+        if (SDEMU !== true) {
+          writeToLog(JSON.stringify(jsonObj));
+        }
+        break;
+      }
+      case 'keyUp': {
 
-            websocket.send(JSON.stringify(showOk));
+        const showOk = {
+          event: 'showOk',
+          context: context,
+        };
+
+        websocket.send(JSON.stringify(showOk));
 
         if (SDEMU !== true) {
           writeToLog(JSON.stringify(jsonObj));
@@ -87,17 +93,10 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
         break;
       }
       /*
-      Remove and keep what you need here just added most of what is emitted from the streamdeck at any given time from either an action or from clicking on the button in the software
+      Remove and keep what you need here. *just added most of what is emitted from the streamdeck at any given time from either pressing a key, clicking on a key in the app or adding/removing a key from the software
       recieved events documentation can be found at: https://developer.elgato.com/documentation/stream-deck/sdk/events-received/
       and events you can send at: https://developer.elgato.com/documentation/stream-deck/sdk/events-sent/
       */
-      case 'keyUp': {
-        if (SDEMU !== true) {
-          writeToLog(JSON.stringify(jsonObj));
-        }
-        break;
-      }
-
       case 'willAppear': {
         if (SDEMU !== true) {
           writeToLog(JSON.stringify(jsonObj));
@@ -132,10 +131,8 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
         }
         break;
       }
-
+       
       case 'didReceiveSettings': {
-        // eslint-disable-next-line no-unused-vars
-        settings = jsonObj.payload.settings;
         if (SDEMU !== true) {
           writeToLog(JSON.stringify(jsonObj));
         }
