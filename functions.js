@@ -25,5 +25,4 @@ function writeToLog(data) {
 module.exports = {
   cliArgs: cliArgs,
   writeToLog: writeToLog,
-  inPkg: require('findFilesInPkg'),
 };

@@ -3,7 +3,7 @@ const minimist = require('minimist');
 const WebSocket = require('ws');
 
 // functions storage to help the file look just a bit cleaner and to easily add new functions if needed without making this file longer than nessacary.
-const { cliArgs, writeToLog, inPkg } = require('./functions');
+const { cliArgs, writeToLog } = require('./functions');
 
 // Convert "-" to "--" from process argv to make them compatable with minimist
 cliArgs();
@@ -23,6 +23,7 @@ const Info = args.Info;
 const SDEMU = args.SDEMU !== undefined ? args.SDEMU : false; // Checks for this argument sent specifically by the streamdeck emulator when testing
 
 // If you have a module that uses exe files Ex.) nircmd use this to extract it to the cwd, see README.md for more info on how to call/modify the call for these files so they can run properly.
+// const inPkg = require('findFilesInPkg');
 // const path = require('path');
 // inPkg(path.join(__dirname, 'node_modules'), undefined, /\.exe$/);
 
@@ -50,7 +51,9 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
     };
 
     websocket.send(JSON.stringify(json));
-    SDEMU === true ? console.log('Connected to Streamdeck Emulator Websocket') : writeToLog('Websocket Connected');
+    SDEMU === true
+      ? console.log('Connected to Streamdeck Emulator Websocket')
+      : writeToLog('Websocket Connected');
   };
 
   websocket.onclose = (evt) => {
