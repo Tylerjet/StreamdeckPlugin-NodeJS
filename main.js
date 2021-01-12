@@ -2,7 +2,7 @@
 const minimist = require('minimist');
 const WebSocket = require('ws');
 
-// functions storage to help the file look just a bit cleaner and to easily add new functions if needed without making this file longer than nessacary.
+// functions storage to help the file look just a bit cleaner and to easily add new functions if needed without making this file longer than it would already be.
 const { cliArgs, writeToLog } = require('./functions');
 
 // Convert "-" to "--" from process argv to make them compatable with minimist
@@ -13,28 +13,29 @@ const args = minimist(process.argv.slice(2));
 
 /*
 Assign args to the proper variables, Obviously
-TODO: Validate Data i guess (i see in many other streamdeck like sdks that they validate the info to make sure its in the correct format
-but unless in the future elgato changes that the data should stay the same since the data comes cmd paramaters so im not sure if there is a real need for it :shrug:)
+TODO: Validate Data i guess (i see in many other validate the info to make sure its in the correct format
+but unless in the future elgato changes the command line arguments then the format should stay the same :shrug:)
 */
 const Port = args.port;
 const PluginUUID = args.pluginUUID;
 const RegisterEvent = args.registerEvent;
 const Info = args.Info;
-const SDEMU = args.SDEMU !== undefined ? args.SDEMU : false; // Checks for this argument sent specifically by the streamdeck emulator when testing
+const SDEMU = args.SDEMU !== undefined ? args.SDEMU : false; // Checks for this argument that is sent specifically by the streamdeck emulator when running tests
 
-// If you have a module that uses exe files Ex.) nircmd use this to extract it to the cwd, see README.md for more info on how to call/modify the call for these files so they can run properly.
-// const inPkg = require('findFilesInPkg');
-// const path = require('path');
-// inPkg(path.join(__dirname, 'node_modules'), undefined, /\.exe$/);
+// If you have a module that uses exe files ( Ex.) nircmd.exe), Then use this to extract it to the cwd, see README.md for more info on how to call/modify the call for these files so they can run properly.
+/* 
+const inPkg = require('findFilesInPkg');
+const path = require('path');
+inPkg(path.join(__dirname, 'node_modules'), undefined, /\.exe$/); 
+*/
 
 /* Insert any custom node module requires here */
 
 /* Insert any custom functions here */
 
 /*
-Usally Called by SD when plugin is added to initiate the connection, 
-but because this will be in exe form we must call the function ourselves since SD cannot,
-same as building a js plugin from here on out for the most part, besides the fact that you can use almost any node module obviously
+Because this is not a true JS only plugin like the elgato examples we call the function manually to initiate the SD connection,
+the rest is done just like a JS plugin with the addition that you can include node modules.
 */
 connectElgatoStreamDeckSocket(Port, PluginUUID, RegisterEvent, Info);
 
@@ -76,6 +77,7 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
 
     switch (jsonObj.event) {
       case 'keyDown': {
+        // Only log if not in the SD Emulator since it will already show the response there
         if (SDEMU !== true) {
           writeToLog(JSON.stringify(jsonObj));
         }

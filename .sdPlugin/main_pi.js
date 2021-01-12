@@ -35,16 +35,6 @@ function connectElgatoStreamDeckSocket(inPort, inUUID, inRegisterEvent, inInfo, 
 
   websocket.onclose = function () {};
 }
-// const elementId = document.getElementById('');
-
-/* const loadSettings = () => {
-  // load settings if some are found
-};
-
-elementId.onchange = () => {
-  console.log(device.value);
-  setSettings(actionInfo.context, Settings Object here); // on update set new settings
-}; */
 
 // Util Functions
 
