@@ -7,8 +7,8 @@
   "scripts": {
     "lint": "eslint --fix .",
     "prettier": "prettier --write .",
-    "test": "pkg package.json --target win --output ./.sdPlugin/main.exe && cd ./SDTest && node ./index.js",
-    "test-nobuild": "cd ./SDTest && node ./index.js",
+    "test": "pkg package.json --target win --output ./.sdPlugin/main.exe && cd ./SDEMU && node ./index.js",
+    "test-nobuild": "cd ./SDEMU && node ./index.js",
     "build-test": "node build.js dist\\test",
     "build-release": "node build.js dist\\release"
   },
