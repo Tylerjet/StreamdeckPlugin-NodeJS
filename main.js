@@ -20,7 +20,7 @@ const Port = args.port;
 const PluginUUID = args.pluginUUID;
 const RegisterEvent = args.registerEvent;
 const Info = args.Info;
-const SDEMU = args.SDEMU !== undefined ? args.SDEMU : false; // Checks for this argument sent specifically by the streamdeck emulator for testing
+const SDEMU = args.SDEMU !== undefined ? args.SDEMU : false; // Checks for this argument sent specifically by the streamdeck emulator when testing
 
 // If you have a module that uses exe files Ex.) nircmd use this to extract it to the cwd, see README.md for more info on how to call/modify the call for these files so they can run properly.
 // const path = require('path');
@@ -50,7 +50,7 @@ function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, in
     };
 
     websocket.send(JSON.stringify(json));
-    SDEMU === true ? console.log('Websocket Connected') : writeToLog('Websocket Connected');
+    SDEMU === true ? console.log('Connected to Streamdeck Emulator Websocket') : writeToLog('Websocket Connected');
   };
 
   websocket.onclose = (evt) => {
