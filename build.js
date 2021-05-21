@@ -5,7 +5,7 @@ const exeName = 'main.exe'; // Name of exe once built // TODO: Use variable to s
 const pluginJS = 'package.json'; // set the script in the bin key of package.json (default is main.js)
 const outputPath = path.join(process.cwd(), process.argv[2]); // The folder you want to output the final plugin too, this is set to release in the build command in package.json
 
-// Do not Mess with things under this line unless you know what you are doing or know how to do things better than i did below
+// Do not Mess with things under this line unless you know what you are doing or know how to do things better than i did in which case do a pull request so i can merge it :)
 const { exec } = require('pkg');
 const fs = require('fs-extra');
 const { execFile } = require('child_process');
