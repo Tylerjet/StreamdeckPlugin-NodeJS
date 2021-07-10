@@ -23,25 +23,25 @@
   },
   "homepage": "https://github.com/Tylerjet/Streamdeck-NodeJS#readme",
   "dependencies": {
-    "chalk": "^4.1.0",
+    "chalk": "^4.1.1",
     "extract-zip": "^2.0.1",
     "findfilesinpkg": "github:Tylerjet/findFilesInPkg",
-    "fs-extra": "^9.0.1",
+    "fs-extra": "^9.1.0",
     "minimist": "^1.2.5",
     "moment": "^2.29.1",
-    "pkg": "github:kkoomen/pkg",
-    "ws": "^7.4.1"
+    "ws": "^7.5.2"
   },
   "devDependencies": {
     "colors": "^1.4.0",
     "diff": "^5.0.0",
-    "eslint": "^7.15.0",
-    "eslint-config-prettier": "^7.0.0",
-    "eslint-config-standard": "^16.0.2",
-    "eslint-plugin-import": "^2.22.1",
+    "eslint": "^7.30.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "prettier": "^2.2.1"
+    "eslint-plugin-promise": "^4.3.1",
+    "pkg": "^5.3.0",
+    "prettier": "^2.3.2"
   },
   "@comment pkg": [
     "Place Glob pattern, or relative path to native .node modules here",
