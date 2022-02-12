@@ -4,7 +4,7 @@ const moment = require('moment');
 // Convert "-" to "--" from process argv to make compatable with minimist
 const cliArgs = () => {
   for (let c = 0; c < process.argv.length; c++) {
-    if (process.argv[c].startsWith('-')) {
+    if (!process.argv[c].startsWith('--')) {
       process.argv[c] = '-' + process.argv[c];
     }
   }
