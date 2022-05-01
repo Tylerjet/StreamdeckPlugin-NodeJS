@@ -1,6 +1,6 @@
 # Streamdeck-NodeJS
 
-Allows you to run NodeJS with the elgato streamdeck by building into a compiled .exe with pkg.
+Allows you to run NodeJS projects and modules with the elgato streamdeck by building into a compiled .exe with pkg.
 
 # Installation
 
