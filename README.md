@@ -40,3 +40,6 @@ Some native modules may require .dll files to run properly i suggest downloading
 # More To Add Soon
 
 Also need to add some form of docs
+
+# TODO
+Eventually refactor and see if there is anything i could do better or improve on as well as updating everything.
