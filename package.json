@@ -28,7 +28,7 @@
     "findfilesinpkg": "github:Tylerjet/findFilesInPkg",
     "fs-extra": "^9.1.0",
     "minimist": "^1.2.5",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "ws": "^7.5.2"
   },
   "devDependencies": {
